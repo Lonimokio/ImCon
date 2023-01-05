@@ -1,0 +1,84 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\skj\\source\\repos\\ImageConverter\\ImageConverter\\ImCon.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\skj\\source\\repos\\ImageConverter\\ImageConverter\\ImCon.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\skj\\source\\repos\\ImageConverter\\ImageConverter\\ImCon.csproj",
+        "projectName": "ImCon",
+        "projectPath": "C:\\Users\\skj\\source\\repos\\ImageConverter\\ImageConverter\\ImCon.csproj",
+        "packagesPath": "C:\\Users\\skj\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\skj\\source\\repos\\ImageConverter\\ImageConverter\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\skj\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0-windows7.0": {
+            "targetAlias": "net6.0-windows",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0-windows7.0": {
+          "targetAlias": "net6.0-windows",
+          "dependencies": {
+            "ImageProcessor": {
+              "target": "Package",
+              "version": "[2.9.1, )"
+            },
+            "ImageProcessor.Plugins.WebP": {
+              "target": "Package",
+              "version": "[1.3.0, )"
+            },
+            "System.Data.Odbc": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WindowsForms": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
