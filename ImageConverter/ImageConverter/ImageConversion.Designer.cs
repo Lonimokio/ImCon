@@ -2,6 +2,7 @@ using ImageProcessor;
 using ImageProcessor.Plugins.WebP.Imaging.Formats;
 using System.Data.Odbc;
 using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace ImageConverter
 {
@@ -29,7 +30,11 @@ namespace ImageConverter
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            this.ActiveControl= Connect;
+            DBName.Text = Environment.GetEnvironmentVariable("kanta");
+            //Environment.CurrentDirectory = Environment.GetEnvironmentVariable("kanta");
+            //DirectoryInfo info = new DirectoryInfo(".");
+            //DBName.Text= info.Name;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -228,16 +233,21 @@ namespace ImageConverter
                 //https://stackoverflow.com/questions/2554609/c-sharp-changing-listbox-row-color
 
                 filename = "";
-                InputB.SelectedIndex = i;
-                InputB2.SelectedIndex = i;
+                if (count != i)
+                {
+                    InputB.SelectedIndex = i;
+                    InputB2.SelectedIndex = i;
+                }
             }
-
+            Left1= 0;
+            counter = 0;
             Iteration = 0;
             cnn.Close();
         }
 
         private void Connect_Click(object sender, EventArgs e)
         {
+            this.ActiveControl = convert;
             if (DBName.Text != "")
             {
                 Connect.Visible = false;

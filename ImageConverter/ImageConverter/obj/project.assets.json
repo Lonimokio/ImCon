@@ -438,11 +438,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\skj\\source\\repos\\ImageConverter\\ImageConverter\\ImageConverter.csproj",
+      "projectUniqueName": "C:\\Coding\\Visual_studio_C#\\ImCon\\ImageConverter\\ImageConverter\\ImageConverter.csproj",
       "projectName": "ImageConverter",
-      "projectPath": "C:\\Users\\skj\\source\\repos\\ImageConverter\\ImageConverter\\ImageConverter.csproj",
+      "projectPath": "C:\\Coding\\Visual_studio_C#\\ImCon\\ImageConverter\\ImageConverter\\ImageConverter.csproj",
       "packagesPath": "C:\\Users\\skj\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\skj\\source\\repos\\ImageConverter\\ImageConverter\\obj\\",
+      "outputPath": "C:\\Coding\\Visual_studio_C#\\ImCon\\ImageConverter\\ImageConverter\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\skj\\AppData\\Roaming\\NuGet\\NuGet.Config",

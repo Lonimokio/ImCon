@@ -234,9 +234,11 @@
             // DBName
             // 
             this.DBName.FormattingEnabled = true;
-            this.DBName.Location = new System.Drawing.Point(334, 181);
+            this.DBName.Items.AddRange(new object[] {
+            "SKJ"});
+            this.DBName.Location = new System.Drawing.Point(366, 181);
             this.DBName.Name = "DBName";
-            this.DBName.Size = new System.Drawing.Size(121, 23);
+            this.DBName.Size = new System.Drawing.Size(55, 23);
             this.DBName.TabIndex = 21;
             // 
             // ImageConversion
