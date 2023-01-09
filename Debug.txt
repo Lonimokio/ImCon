@@ -1,5 +1,1 @@
 Things to fix:
-
-Make option for deletion
-Make option for path where to save images
-Log the user who made changes
