@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 Things to fix:
 
 Make separete tiny pictures for display purposes
+=======
+Things to fix:
+
+Make separete tiny pictures for display purposes
+>>>>>>> e13a3a31d60047e777f2f8ee6e247690f6df896f
