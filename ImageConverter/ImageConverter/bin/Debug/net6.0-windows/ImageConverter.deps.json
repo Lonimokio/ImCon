@@ -11,7 +11,9 @@
           "ImageProcessor": "2.9.1",
           "ImageProcessor.Plugins.WebP": "1.3.0",
           "System.Data.Odbc": "7.0.0",
-          "System.Drawing.Common": "7.0.0"
+          "System.Drawing.Common": "7.0.0",
+          "libwebp.v140": "0.5.0.2",
+          "libwebp.v140.redist": "0.5.0.1"
         },
         "runtime": {
           "ImageConverter.dll": {}
@@ -39,6 +41,12 @@
           }
         }
       },
+      "libwebp.v140/0.5.0.2": {
+        "dependencies": {
+          "libwebp.v140.redist": "0.5.0.1"
+        }
+      },
+      "libwebp.v140.redist/0.5.0.1": {},
       "Microsoft.Win32.SystemEvents/7.0.0": {
         "runtime": {
           "lib/net6.0/Microsoft.Win32.SystemEvents.dll": {
@@ -153,6 +161,20 @@
       "sha512": "sha512-b/XezEJDaiEp9bUhoPMXbPPSes7ugA+z97sRu5CnpOkGnbbJZJtgaz16uSp63/7DHqNuaL+g/Tr9mPmS0HzjVA==",
       "path": "imageprocessor.plugins.webp/1.3.0",
       "hashPath": "imageprocessor.plugins.webp.1.3.0.nupkg.sha512"
+    },
+    "libwebp.v140/0.5.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-PINoxl5EdMxvSsOf3I6hMmQ7AZ0WFSge0sE8Vt9HiX3lrF2sBif0KZKOqVb92yFd11dUGTbnf3iw5j6oQA8xaw==",
+      "path": "libwebp.v140/0.5.0.2",
+      "hashPath": "libwebp.v140.0.5.0.2.nupkg.sha512"
+    },
+    "libwebp.v140.redist/0.5.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Sw8QXrYArlL1PF7IYCseJag1PBbXgwWAW9ZHv8QQhDbCo6OrfJ01GqwrGBDOKtt/jhBJK1kYh88xalH6cBabqA==",
+      "path": "libwebp.v140.redist/0.5.0.1",
+      "hashPath": "libwebp.v140.redist.0.5.0.1.nupkg.sha512"
     },
     "Microsoft.Win32.SystemEvents/7.0.0": {
       "type": "package",

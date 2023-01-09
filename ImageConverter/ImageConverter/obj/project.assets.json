@@ -34,6 +34,15 @@
           }
         }
       },
+      "libwebp.v140/0.5.0.2": {
+        "type": "package",
+        "dependencies": {
+          "libwebp.v140.redist": "0.5.0.1"
+        }
+      },
+      "libwebp.v140.redist/0.5.0.1": {
+        "type": "package"
+      },
       "Microsoft.Win32.SystemEvents/7.0.0": {
         "type": "package",
         "compile": {
@@ -196,6 +205,45 @@
         "imageprocessor.plugins.webp.nuspec",
         "lib/net452/ImageProcessor.Plugins.WebP.dll",
         "lib/net452/ImageProcessor.Plugins.WebP.xml"
+      ]
+    },
+    "libwebp.v140/0.5.0.2": {
+      "sha512": "PINoxl5EdMxvSsOf3I6hMmQ7AZ0WFSge0sE8Vt9HiX3lrF2sBif0KZKOqVb92yFd11dUGTbnf3iw5j6oQA8xaw==",
+      "type": "package",
+      "path": "libwebp.v140/0.5.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/configurations.autopkg",
+        "build/native/include/webp/decode.h",
+        "build/native/include/webp/encode.h",
+        "build/native/include/webp/types.h",
+        "build/native/lib/Win32/Debug/libwebp_debug_dll.lib",
+        "build/native/lib/Win32/Release/libwebp_dll.lib",
+        "build/native/lib/x64/Debug/libwebp_debug_dll.lib",
+        "build/native/lib/x64/Release/libwebp_dll.lib",
+        "build/native/libwebp.v140.targets",
+        "libwebp.v140.0.5.0.2.nupkg.sha512",
+        "libwebp.v140.nuspec"
+      ]
+    },
+    "libwebp.v140.redist/0.5.0.1": {
+      "sha512": "Sw8QXrYArlL1PF7IYCseJag1PBbXgwWAW9ZHv8QQhDbCo6OrfJ01GqwrGBDOKtt/jhBJK1kYh88xalH6cBabqA==",
+      "type": "package",
+      "path": "libwebp.v140.redist/0.5.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/configurations.autopkg",
+        "build/native/bin/Win32/Debug/libwebp_debug.dll",
+        "build/native/bin/Win32/Debug/libwebp_debug_dll.pdb",
+        "build/native/bin/Win32/Release/libwebp.dll",
+        "build/native/bin/x64/Debug/libwebp_debug.dll",
+        "build/native/bin/x64/Debug/libwebp_debug_dll.pdb",
+        "build/native/bin/x64/Release/libwebp.dll",
+        "build/native/libwebp.v140.redist.targets",
+        "libwebp.v140.redist.0.5.0.1.nupkg.sha512",
+        "libwebp.v140.redist.nuspec"
       ]
     },
     "Microsoft.Win32.SystemEvents/7.0.0": {
@@ -429,7 +477,9 @@
       "ImageProcessor >= 2.9.1",
       "ImageProcessor.Plugins.WebP >= 1.3.0",
       "System.Data.Odbc >= 7.0.0",
-      "System.Drawing.Common >= 7.0.0"
+      "System.Drawing.Common >= 7.0.0",
+      "libwebp.v140 >= 0.5.0.2",
+      "libwebp.v140.redist >= 0.5.0.1"
     ]
   },
   "packageFolders": {
@@ -486,6 +536,14 @@
           "System.Drawing.Common": {
             "target": "Package",
             "version": "[7.0.0, )"
+          },
+          "libwebp.v140": {
+            "target": "Package",
+            "version": "[0.5.0.2, )"
+          },
+          "libwebp.v140.redist": {
+            "target": "Package",
+            "version": "[0.5.0.1, )"
           }
         },
         "imports": [

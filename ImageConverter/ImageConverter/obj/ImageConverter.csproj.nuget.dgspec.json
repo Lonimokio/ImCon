@@ -55,6 +55,14 @@
             "System.Drawing.Common": {
               "target": "Package",
               "version": "[7.0.0, )"
+            },
+            "libwebp.v140": {
+              "target": "Package",
+              "version": "[0.5.0.2, )"
+            },
+            "libwebp.v140.redist": {
+              "target": "Package",
+              "version": "[0.5.0.1, )"
             }
           },
           "imports": [
