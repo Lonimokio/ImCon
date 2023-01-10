@@ -1,4 +1,6 @@
-﻿namespace ImageConverter
+﻿using System.ComponentModel;
+
+namespace ImageConverter
 {
     partial class ImageConversion
     {
@@ -28,6 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.convert = new System.Windows.Forms.Button();
             this.TypeB = new System.Windows.Forms.ComboBox();
             this.SLabel = new System.Windows.Forms.Label();
@@ -55,6 +58,12 @@
             this.SmallImages = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.Convertion = new System.Windows.Forms.GroupBox();
+            this.Cancel = new System.Windows.Forms.Button();
+            this.KuvaTeksti = new System.Windows.Forms.ListBox();
+            this.TableN = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.TipConvert = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.QualityB)).BeginInit();
             this.Convertion.SuspendLayout();
             this.SuspendLayout();
@@ -62,11 +71,12 @@
             // convert
             // 
             this.convert.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.convert.Location = new System.Drawing.Point(227, 140);
+            this.convert.Location = new System.Drawing.Point(227, 141);
             this.convert.Name = "convert";
             this.convert.Size = new System.Drawing.Size(213, 80);
             this.convert.TabIndex = 0;
             this.convert.Text = "Convert";
+            this.TipConvert.SetToolTip(this.convert, "Begin convertion progress");
             this.convert.UseVisualStyleBackColor = true;
             this.convert.Click += new System.EventHandler(this.convert_Click);
             // 
@@ -81,6 +91,7 @@
             this.TypeB.Size = new System.Drawing.Size(54, 23);
             this.TypeB.TabIndex = 1;
             this.TypeB.Text = "webp";
+            this.TipConvert.SetToolTip(this.TypeB, "Choose the format you want to use");
             this.TypeB.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // SLabel
@@ -106,11 +117,12 @@
             // Connect
             // 
             this.Connect.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Connect.Location = new System.Drawing.Point(687, 322);
+            this.Connect.Location = new System.Drawing.Point(687, 285);
             this.Connect.Name = "Connect";
             this.Connect.Size = new System.Drawing.Size(101, 43);
             this.Connect.TabIndex = 6;
             this.Connect.Text = "Connect";
+            this.TipConvert.SetToolTip(this.Connect, "Connect to selected database\r\nand search selected table");
             this.Connect.UseVisualStyleBackColor = true;
             this.Connect.Click += new System.EventHandler(this.Connect_Click);
             // 
@@ -118,7 +130,7 @@
             // 
             this.FLabel.AutoSize = true;
             this.FLabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.FLabel.Location = new System.Drawing.Point(682, 280);
+            this.FLabel.Location = new System.Drawing.Point(682, 243);
             this.FLabel.Name = "FLabel";
             this.FLabel.Size = new System.Drawing.Size(110, 17);
             this.FLabel.TabIndex = 8;
@@ -133,6 +145,7 @@
             this.InputB.Name = "InputB";
             this.InputB.Size = new System.Drawing.Size(120, 94);
             this.InputB.TabIndex = 10;
+            this.TipConvert.SetToolTip(this.InputB, "Image locations");
             // 
             // label1
             // 
@@ -151,6 +164,7 @@
             this.InputB2.Name = "InputB2";
             this.InputB2.Size = new System.Drawing.Size(120, 94);
             this.InputB2.TabIndex = 12;
+            this.TipConvert.SetToolTip(this.InputB2, "Product numbers");
             // 
             // Credits
             // 
@@ -170,6 +184,7 @@
             this.ProgressB.Name = "ProgressB";
             this.ProgressB.Size = new System.Drawing.Size(120, 23);
             this.ProgressB.TabIndex = 14;
+            this.TipConvert.SetToolTip(this.ProgressB, "Progress bar");
             // 
             // Left
             // 
@@ -221,6 +236,7 @@
             this.QualityB.Name = "QualityB";
             this.QualityB.Size = new System.Drawing.Size(54, 23);
             this.QualityB.TabIndex = 20;
+            this.TipConvert.SetToolTip(this.QualityB, "Set the quality of image % of original");
             this.QualityB.ValueChanged += new System.EventHandler(this.QualityB_ValueChanged);
             // 
             // DBName
@@ -228,10 +244,11 @@
             this.DBName.FormattingEnabled = true;
             this.DBName.Items.AddRange(new object[] {
             "SKJ"});
-            this.DBName.Location = new System.Drawing.Point(687, 300);
+            this.DBName.Location = new System.Drawing.Point(687, 263);
             this.DBName.Name = "DBName";
             this.DBName.Size = new System.Drawing.Size(101, 23);
             this.DBName.TabIndex = 21;
+            this.TipConvert.SetToolTip(this.DBName, "Choose your database");
             // 
             // label2
             // 
@@ -254,11 +271,12 @@
             // ConnectionBox
             // 
             this.ConnectionBox.Enabled = false;
-            this.ConnectionBox.Location = new System.Drawing.Point(688, 359);
+            this.ConnectionBox.Location = new System.Drawing.Point(688, 322);
             this.ConnectionBox.Name = "ConnectionBox";
             this.ConnectionBox.Size = new System.Drawing.Size(100, 23);
             this.ConnectionBox.TabIndex = 24;
             this.ConnectionBox.Text = "Connected to: ";
+            this.TipConvert.SetToolTip(this.ConnectionBox, "Your currently connected to this server");
             // 
             // PathB
             // 
@@ -268,6 +286,7 @@
             this.PathB.TabIndex = 25;
             this.PathB.Text = "C:\\winskj\\";
             this.PathB.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TipConvert.SetToolTip(this.PathB, "Type in path you want pictures\r\nto be saved into");
             // 
             // label5
             // 
@@ -287,6 +306,7 @@
             this.Deletion.Size = new System.Drawing.Size(108, 17);
             this.Deletion.TabIndex = 27;
             this.Deletion.Text = "Enable Deletion";
+            this.TipConvert.SetToolTip(this.Deletion, "Deletes old images after moving them");
             this.Deletion.UseVisualStyleBackColor = true;
             // 
             // SmallImages
@@ -297,6 +317,7 @@
             this.SmallImages.Size = new System.Drawing.Size(133, 19);
             this.SmallImages.TabIndex = 28;
             this.SmallImages.Text = "Enable small images";
+            this.TipConvert.SetToolTip(this.SmallImages, "Generate small image in case support for webp is limited");
             this.SmallImages.UseVisualStyleBackColor = true;
             // 
             // checkBox3
@@ -312,6 +333,7 @@
             // Convertion
             // 
             this.Convertion.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.Convertion.Controls.Add(this.Cancel);
             this.Convertion.Controls.Add(this.convert);
             this.Convertion.Controls.Add(this.checkBox3);
             this.Convertion.Controls.Add(this.QualityB);
@@ -331,6 +353,7 @@
             this.Convertion.Controls.Add(this.label4);
             this.Convertion.Controls.Add(this.DoneL);
             this.Convertion.Controls.Add(this.label2);
+            this.Convertion.Controls.Add(this.KuvaTeksti);
             this.Convertion.Location = new System.Drawing.Point(59, 77);
             this.Convertion.Name = "Convertion";
             this.Convertion.Size = new System.Drawing.Size(584, 268);
@@ -338,12 +361,66 @@
             this.Convertion.TabStop = false;
             this.Convertion.Text = "Convertion";
             // 
+            // Cancel
+            // 
+            this.Cancel.Enabled = false;
+            this.Cancel.Location = new System.Drawing.Point(504, 239);
+            this.Cancel.Name = "Cancel";
+            this.Cancel.Size = new System.Drawing.Size(75, 23);
+            this.Cancel.TabIndex = 31;
+            this.Cancel.Text = "Cancel";
+            this.Cancel.UseVisualStyleBackColor = true;
+            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
+            // 
+            // KuvaTeksti
+            // 
+            this.KuvaTeksti.FormattingEnabled = true;
+            this.KuvaTeksti.ItemHeight = 15;
+            this.KuvaTeksti.Location = new System.Drawing.Point(36, 41);
+            this.KuvaTeksti.Name = "KuvaTeksti";
+            this.KuvaTeksti.Size = new System.Drawing.Size(120, 94);
+            this.KuvaTeksti.TabIndex = 30;
+            this.KuvaTeksti.Visible = false;
+            // 
+            // TableN
+            // 
+            this.TableN.Location = new System.Drawing.Point(688, 362);
+            this.TableN.Name = "TableN";
+            this.TableN.Size = new System.Drawing.Size(100, 23);
+            this.TableN.TabIndex = 30;
+            this.TableN.Text = "TUOTEKUV";
+            this.TableN.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TipConvert.SetToolTip(this.TableN, "Select the table you want to use\r\n(Note might not work with small images)");
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(703, 346);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(67, 15);
+            this.label6.TabIndex = 31;
+            this.label6.Text = "Table name";
+            // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.WorkerReportsProgress = true;
+            this.backgroundWorker1.WorkerSupportsCancellation = true;
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
+            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
+            // 
+            // TipConvert
+            // 
+            this.TipConvert.Popup += new System.Windows.Forms.PopupEventHandler(this.TipConvert_Popup);
+            // 
             // ImageConversion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(809, 461);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.TableN);
             this.Controls.Add(this.Convertion);
             this.Controls.Add(this.ConnectionBox);
             this.Controls.Add(this.DBName);
@@ -378,9 +455,7 @@
         private Label label3;
         private Button Connect;
         private Label FLabel;
-        private ListBox InputB;
         private Label label1;
-        private ListBox InputB2;
         private Label Credits;
         private ProgressBar ProgressB;
         private Label Left;
@@ -389,5 +464,22 @@
         private Label LeftL;
         private Panel panel1;
         private NumericUpDown QualityB;
+        private ComboBox DBName;
+        private Label label2;
+        private Label label4;
+        private TextBox ConnectionBox;
+        private TextBox PathB;
+        private Label label5;
+        private CheckBox Deletion;
+        private CheckBox SmallImages;
+        private CheckBox checkBox3;
+        private GroupBox Convertion;
+        private TextBox TableN;
+        private Label label6;
+        private ListBox KuvaTeksti;
+        private Button Cancel;
+        public BackgroundWorker backgroundWorker1;
+        public ListBox InputB;
+        public ListBox InputB2;
     }
 }
