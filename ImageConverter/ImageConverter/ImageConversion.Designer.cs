@@ -24,9 +24,17 @@ namespace ImageConverter
         private string Converted;
         string sourceFile;
         string odbc;
+        public string sourcePath;
+        public string pathString;
+        string connectionstring;
+        string Odbc, output;
+        string pathString1;
+        string filename1 = "";
+        string sourcePath1;
         int length;
         int amount;
         int amount1;
+        int Timer;
         private int Quality;
         private int count;
         private int Iteration = 0;
@@ -36,8 +44,6 @@ namespace ImageConverter
         OdbcDataReader dataReader;
         OdbcConnection cnn;
         OdbcDataAdapter adapter;
-        string connectionstring;
-        string Odbc, output;
         List<string> Files = new List<string>();
         List<string> FileN = new List<string>();
         List<string> FileK = new List<string>();
@@ -108,6 +114,14 @@ namespace ImageConverter
             }
         }
 
+        public void DProblem(Exception ex)
+        {
+            Debug.WriteLine("<<< catch : " + ex.ToString());
+            using StreamWriter sw = File.AppendText(PathB.Text + @"Kuvat\Failed.Txt");
+            sw.WriteLine("Error in Sql syntax in " + filename + " this should be manually fixed. Path to it should be: " + sourcePath + " Error is: " + ex);
+            sw.Close();
+        }
+
         private void convert_Click(object sender, EventArgs e)
         {
                 if (Files.Count > 0)
@@ -126,6 +140,7 @@ namespace ImageConverter
                     amount1 = (int)(CDouble / 2 - 0.5);
                 }
                 //Starting progress
+                timer1.Start();
                 backgroundWorker1.RunWorkerAsync();
                 backgroundWorker2.RunWorkerAsync();
                 //Disabling some controls
@@ -191,6 +206,7 @@ namespace ImageConverter
             }
         }
 
+        #region Backgroundworkers do stuff
         //Background worker to make code run smoother
         private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
@@ -322,7 +338,7 @@ namespace ImageConverter
                         TempS = "";
 
                         //Updating filepaths
-                        string sourcePath = Converted;
+                        sourcePath = Converted;
                         sourceFile = System.IO.Path.Combine(sourcePath);
                         string destFile = System.IO.Path.Combine(pathString, filename);
                         //Catching possible errors
@@ -362,25 +378,17 @@ namespace ImageConverter
                         }
                         catch (Exception ex)
                         {
-                            Debug.WriteLine("<<< catch : " + ex.ToString());
-                            using StreamWriter sw = File.AppendText(PathB.Text + @"Kuvat\Failed.Txt");
-                            sw.WriteLine("Error in Sql syntax in " + filename + " this should be manually fixed. Path to it should be: " + sourcePath + " Error is: " + ex);
-
+                            try
+                            {
+                                DProblem(ex);
+                            }
+                            catch
+                            {
+                            Thread.Sleep(1);
+                                DProblem(ex);
+                            }
                         }
                         command.Dispose();
-
-                        //Making log file to record everything done
-                        using (StreamWriter sw = File.AppendText(PathB.Text + @"Kuvat\Log.Txt"))
-                        {
-                            if (Iteration == 0)
-                            {
-                                sw.WriteLine(DateTime.Now.ToString("ddd, dd MMM yyy HH':'mm':'ss 'GMT'"));
-                                sw.WriteLine("User who made the change: " + System.Security.Principal.WindowsIdentity.GetCurrent().Name);
-                                sw.WriteLine("");
-                                Iteration = 1;
-                            }
-                            sw.WriteLine("Moved " + filename + " from " + sourcePath + " to " + pathString);
-                        }
 
                         //Listbox colour change
                         //https://stackoverflow.com/questions/2554609/c-sharp-changing-listbox-row-color
@@ -397,7 +405,7 @@ namespace ImageConverter
             BackgroundWorker worker = sender as BackgroundWorker;
 
             //Looping trough to procces images
-            for (int i = amount; i <= 1; i--)
+            for (int i = count; i >= amount; i--)
             {
                 if (worker.CancellationPending == true)
                 {
@@ -465,7 +473,7 @@ namespace ImageConverter
                         int index = separator.IndexOf(".");
                         if (index >= 0)
                         {
-                            separator = separator[..index];
+                            separator = separator.Substring(0, index);
                         }
 
                         Converted = separator + "." + type;
@@ -506,8 +514,8 @@ namespace ImageConverter
                     }
                     //Creating folders and moving images
                     string folderName = PathB.Text + "Kuvat";
-                    string pathString = System.IO.Path.Combine(folderName, "Tuote-numero-" + FileN[i]);
-                    _ = System.IO.Directory.CreateDirectory(pathString);
+                    pathString1 = System.IO.Path.Combine(folderName, "Tuote-numero-" + FileN[i]);
+                    _ = System.IO.Directory.CreateDirectory(pathString1);
 
                     separator = Converted;
 
@@ -517,14 +525,14 @@ namespace ImageConverter
                     //getting filename by running trough until hitting \
                     FNameG();
                     //Putting rigth filenames and reseting values
-                    filename = TempS;
+                    filename1 = TempS;
 
                     TempS = "";
 
                     //Updating filepaths
-                    string sourcePath = Converted;
-                    sourceFile = System.IO.Path.Combine(sourcePath);
-                    string destFile = System.IO.Path.Combine(pathString, filename);
+                    string sourcePath1 = Converted;
+                    sourceFile = System.IO.Path.Combine(sourcePath1);
+                    string destFile = System.IO.Path.Combine(pathString1, filename1);
                     //Catching possible errors
                     try
                     {
@@ -539,7 +547,7 @@ namespace ImageConverter
                     {
                         //Inserting small images to database
                         OdbcDataAdapter adapter = new();
-                        string odbc = "INSERT INTO " + TableN.Text + " (TuoteNro, Tiedosto, Kuvateksti, Verkkokaupassa) VALUES('" + FileN[i] + "', '" + pathString + @"\" + filenameS + "', PikkuKuva, 0); ";
+                        string odbc = "INSERT INTO " + TableN.Text + " (TuoteNro, Tiedosto, Kuvateksti, Verkkokaupassa) VALUES('" + FileN[i] + "', '" + pathString1 + @"\" + filenameS + "', PikkuKuva, 0); ";
                         command = new OdbcCommand(odbc, cnn);
                         adapter.UpdateCommand = new OdbcCommand(odbc, cnn);
                         try
@@ -553,7 +561,7 @@ namespace ImageConverter
                     }
                     //Updating database
                     adapter = new();
-                    odbc = "UPDATE " + TableN.Text + " SET Tiedosto = '" + pathString + @"\" + filename + "' Where Tiedosto = " + "'" + Files[i] + "'";
+                    odbc = "UPDATE " + TableN.Text + " SET Tiedosto = '" + pathString1 + @"\" + filename1 + "' Where Tiedosto = " + "'" + Files[i] + "'";
                     command = new OdbcCommand(odbc, cnn);
                     adapter.UpdateCommand = new OdbcCommand(odbc, cnn);
                     try
@@ -562,30 +570,22 @@ namespace ImageConverter
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine("<<< catch : " + ex.ToString());
-                        using StreamWriter sw = File.AppendText(PathB.Text + @"Kuvat\Failed.Txt");
-                        sw.WriteLine("Error in Sql syntax in " + filename + " this should be manually fixed. Path to it should be: " + sourcePath + " Error is: " + ex);
-
+                        try
+                        {
+                            DProblem(ex);
+                        }
+                        catch
+                        {
+                            Thread.Sleep(1);
+                            DProblem(ex);
+                        }
                     }
                     command.Dispose();
-
-                    //Making log file to record everything done
-                    using (StreamWriter sw = File.AppendText(PathB.Text + @"Kuvat\Log.Txt"))
-                    {
-                        if (Iteration == 0)
-                        {
-                            sw.WriteLine(DateTime.Now.ToString("ddd, dd MMM yyy HH':'mm':'ss 'GMT'"));
-                            sw.WriteLine("User who made the change: " + System.Security.Principal.WindowsIdentity.GetCurrent().Name);
-                            sw.WriteLine("");
-                            Iteration = 1;
-                        }
-                        sw.WriteLine("Moved " + filename + " from " + sourcePath + " to " + pathString);
-                    }
 
                     //Listbox colour change
                     //https://stackoverflow.com/questions/2554609/c-sharp-changing-listbox-row-color
 
-                    filename = "";
+                    filename1 = "";
                     counter++;
                     worker.ReportProgress(1 * 1);
                 }
@@ -594,7 +594,7 @@ namespace ImageConverter
 
         private void backgroundWorker1_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
-            if (InputB.Items.Count >counter)
+            if (InputB.Items.Count > counter)
             {
                 InputB.SelectedIndex = counter;
                 InputB2.SelectedIndex = counter;
@@ -611,6 +611,27 @@ namespace ImageConverter
             {
                 ProgressB.Value = counter;
             }
+            //Making log file to record everything done
+            using (StreamWriter sw = File.AppendText(PathB.Text + @"Kuvat\Log.Txt"))
+            {
+                if (Iteration == 0)
+                {
+                        sw.WriteLine(DateTime.Now.ToString("ddd, dd MMM yyy HH':'mm':'ss 'GMT'"));
+                        sw.WriteLine("User who made the change: " + System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+                        sw.WriteLine("");
+                        Iteration = 1;
+                }
+                if (sender == backgroundWorker1)
+                {
+                    sw.WriteLine("Moved " + filename + " from " + sourcePath + " to " + pathString);
+                    sw.Close();
+                }
+                else if (sender == backgroundWorker2) 
+                {
+                    sw.WriteLine("Moved " + filename1 + " from " + sourcePath1 + " to " + pathString1);
+                    sw.Close();
+                }
+            }
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
@@ -621,7 +642,7 @@ namespace ImageConverter
             }
             else if (FTime == false)
             {
-                counter++;
+                timer1.Stop();
                 if (e.Error != null)
                 {
                     MessageBox.Show(e.Error.Message);
@@ -634,12 +655,12 @@ namespace ImageConverter
                 {
                     _ = MessageBox.Show("Done. Moved and converted " + counter + " images");
                 }
-                Done.Text = counter.ToString();
                 ProgressB.Value = 0;
                 Left1 = 0;
                 counter = 0;
                 Iteration = 0;
                 cnn.Close();
+                timer1.Stop();
 
                 //Enabling some controls
                 convert.Enabled = true;
@@ -651,6 +672,8 @@ namespace ImageConverter
                 Cancel.Enabled = false;
             }
         }
+
+        #endregion
 
         //Making quality be the thing its meant to be
         private void QualityB_ValueChanged(object sender, EventArgs e)
@@ -675,6 +698,12 @@ namespace ImageConverter
 
         }
 
-        private System.Windows.Forms.Timer timer1;
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            Timer++;
+            TimeElapsed.Text = "Time elapsed: " + Timer;
+        }
+
+        private Label TimeElapsed;
     }
 }

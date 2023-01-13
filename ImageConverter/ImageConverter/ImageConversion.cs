@@ -58,6 +58,7 @@ namespace ImageConverter
             this.SmallImages = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.Convertion = new System.Windows.Forms.GroupBox();
+            this.TimeElapsed = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.Cancel = new System.Windows.Forms.Button();
             this.TableN = new System.Windows.Forms.TextBox();
@@ -230,7 +231,7 @@ namespace ImageConverter
             this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panel1.Location = new System.Drawing.Point(-6, 388);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(817, 80);
+            this.panel1.Size = new System.Drawing.Size(817, 89);
             this.panel1.TabIndex = 19;
             // 
             // QualityB
@@ -336,6 +337,7 @@ namespace ImageConverter
             // Convertion
             // 
             this.Convertion.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.Convertion.Controls.Add(this.TimeElapsed);
             this.Convertion.Controls.Add(this.label6);
             this.Convertion.Controls.Add(this.Cancel);
             this.Convertion.Controls.Add(this.TableN);
@@ -371,6 +373,15 @@ namespace ImageConverter
             this.Convertion.TabIndex = 30;
             this.Convertion.TabStop = false;
             this.Convertion.Text = "Convertion";
+            // 
+            // TimeElapsed
+            // 
+            this.TimeElapsed.AutoSize = true;
+            this.TimeElapsed.Location = new System.Drawing.Point(54, 247);
+            this.TimeElapsed.Name = "TimeElapsed";
+            this.TimeElapsed.Size = new System.Drawing.Size(82, 15);
+            this.TimeElapsed.TabIndex = 32;
+            this.TimeElapsed.Text = "Time elapsed: ";
             // 
             // label6
             // 
@@ -432,6 +443,11 @@ namespace ImageConverter
             this.backgroundWorker2.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker2_DoWork);
             this.backgroundWorker2.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             this.backgroundWorker2.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // ImageConversion
             // 
@@ -496,5 +512,7 @@ namespace ImageConverter
         public ListBox InputB;
         public ListBox InputB2;
         private BackgroundWorker backgroundWorker2;
+        private System.Windows.Forms.Timer timer1;
+
     }
 }
