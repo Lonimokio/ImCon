@@ -3,6 +3,12 @@
 Make program use background worker to increasee efficiency if possible add multitrheading capabilities
 Timer to tell how much operation took and how long it is potentially gonna take
 porcentage of being ready
+Advanced settings
+visual overhaul use multiple forms
+make first screen where you choose where to go
+make settings using text file
+use the webp wrapper to add bunch of useful functions
+look into making aplication installer
 
 Maybe:
 Add ability to convert files from your computer directly

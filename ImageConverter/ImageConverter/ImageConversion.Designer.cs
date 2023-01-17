@@ -18,10 +18,13 @@ namespace ImageConverter
         private string type = "webp";
         private string filename = "";
         string filenameS;
+        string filenameT ="";
         private string Checker;
         private string separator;
+        string separatorT;
         string TempS;
         private string Converted;
+        string convertedS;
         string sourceFile;
         string odbc;
         public string sourcePath;
@@ -32,8 +35,7 @@ namespace ImageConverter
         string filename1 = "";
         string sourcePath1;
         int length;
-        int amount;
-        int amount1;
+        int lengthT;
         int Timer;
         private int Quality;
         private int count;
@@ -54,12 +56,6 @@ namespace ImageConverter
         public ImageConversion()
         {
             InitializeComponent();
-            InitializeBackgroundWorker();
-        }
-
-        private void InitializeBackgroundWorker()
-        {
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -81,13 +77,19 @@ namespace ImageConverter
             type = TypeB.Text;
         }
 
-        public void FNameG()
+        public void GetFileN(int i)
         {
+            //getting filename by running trough until hitting \
+            separatorT = Files[i];
+            length = Files[i].Length;
+            length--;
+            lengthT = separatorT.Length;
+            lengthT--;
             while (true)
             {
                 try
                 {
-                    Checker = separator.Substring(length, 1);
+                    Checker = separatorT.Substring(lengthT, 1);
                 }
                 catch (Exception)
                 {
@@ -97,21 +99,24 @@ namespace ImageConverter
                 {
                     break;
                 }
-                filename += Checker;
+                filenameT += Checker;
                 Checker = "";
-                length--;
+                lengthT--;
             }
             //Settup for calculation.
-            length = filename.Length;
-            length--;
+            lengthT = filenameT.Length;
+            lengthT--;
             //Inverting string. Because it comes out wrong way from procces above.
-            for (int a = 0; a <= length;)
+            for (int a = 0; a <= lengthT;)
             {
-                Checker = filename.Substring(length, 1);
+                Checker = filenameT.Substring(lengthT, 1);
                 TempS += Checker;
                 Checker = "";
-                length--;
+                lengthT--;
             }
+            filenameT = "";
+
+            filename = TempS;
         }
 
         public void DProblem(Exception ex)
@@ -127,22 +132,10 @@ namespace ImageConverter
                 if (Files.Count > 0)
                 {
                 //Getting amount of items.
-                    count = Files.Count - 1;
-                try
-                {
-                    amount = count / 2;
-                    amount1 = count / 2;
-                }
-                catch
-                {
-                    CDouble = count;
-                    amount = (int)(CDouble / 2 + 0.5);
-                    amount1 = (int)(CDouble / 2 - 0.5);
-                }
+                count = Files.Count - 1;
                 //Starting progress
                 timer1.Start();
                 backgroundWorker1.RunWorkerAsync();
-                backgroundWorker2.RunWorkerAsync();
                 //Disabling some controls
                 convert.Enabled= false;
                 TypeB.Enabled= false;
@@ -213,7 +206,7 @@ namespace ImageConverter
             BackgroundWorker worker = sender as BackgroundWorker;
             
                     //Looping trough to procces images
-                    for (int i = 1; i <= amount; i++)
+                    for (int i = 1; i <= count; i++)
                     {
                         if (worker.CancellationPending == true)
                         {
@@ -235,12 +228,7 @@ namespace ImageConverter
 
                         if (SmallImages.Checked)
                         {
-                            //getting filename by running trough until hitting \
-                            separator = Files[i];
-                            length = Files[i].Length;
-                            length--;
-                            FNameG();
-                            filename = TempS;
+                        GetFileN(i);
                             length = Files[i].Length - filename.Length;
 
 
@@ -283,7 +271,6 @@ namespace ImageConverter
                             {
                                 separator = separator[..index];
                             }
-
                             Converted = separator + "." + type;
                             string oldImagePath = Files[i];
                             string webpFilePath = Converted;
@@ -330,10 +317,8 @@ namespace ImageConverter
                         length = separator.Length;
                         length--;
 
-                        //getting filename by running trough until hitting \
-                        FNameG();
-                        //Putting rigth filenames and reseting values
-                        filename = TempS;
+                    //getting filename by running trough until hitting \
+                    GetFileN(i);
 
                         TempS = "";
 
@@ -400,198 +385,6 @@ namespace ImageConverter
                 }
         }
 
-        private void backgroundWorker2_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            BackgroundWorker worker = sender as BackgroundWorker;
-
-            //Looping trough to procces images
-            for (int i = count; i >= amount; i--)
-            {
-                if (worker.CancellationPending == true)
-                {
-                    e.Cancel = true;
-                    break;
-                }
-                else
-                {
-                    if (FileK.Count == i)
-                    {
-                        if (FileK[i] == "PikkuKuva")
-                        {
-                            continue;
-                        }
-                    }
-
-                    //Changing path in a way to prevent fails and prevent sql injection. Double '
-                    Files[i].Replace("'", "''");
-
-                    if (SmallImages.Checked)
-                    {
-                        //getting filename by running trough until hitting \
-                        separator = Files[i];
-                        length = Files[i].Length;
-                        length--;
-                        FNameG();
-                        filename = TempS;
-                        length = Files[i].Length - filename.Length;
-
-
-                        TempS = Files[i].Substring(0, length) + "Pikkukuva" + filename;
-                        length = TempS.Length - 4;
-                        TempS = TempS.Substring(0, length) + "Jpeg";
-
-                        //Creating copy of image to use for small image.
-                        string sourceFile = Files[i];
-                        string destinationFile = TempS;
-                        try
-                        {
-                            File.Copy(sourceFile, destinationFile, true);
-
-                            // Converting small images into jpeg
-                            var stream = new MemoryStream(File.ReadAllBytes(destinationFile));
-                            Image img = new Bitmap(stream);
-                            img.Save(TempS, System.Drawing.Imaging.ImageFormat.Jpeg);
-                        }
-                        catch
-                        {
-
-                        }
-
-                        filenameS = filename;
-                        TempS = "";
-                        sourceFile = "";
-                        destinationFile = "";
-                        filename = "";
-                    }
-
-                    //Checking if file already in webp
-                    Checker = Files[i][^4..];
-                    if (Checker != type)
-                    {
-                        //File convertion
-                        separator = Files[i];
-                        int index = separator.IndexOf(".");
-                        if (index >= 0)
-                        {
-                            separator = separator.Substring(0, index);
-                        }
-
-                        Converted = separator + "." + type;
-                        string oldImagePath = Files[i];
-                        string webpFilePath = Converted;
-
-                        if (File.Exists(oldImagePath))
-                        {
-                            try
-                            {
-                                using FileStream webPFileStream = new(webpFilePath, FileMode.Create);
-                                using ImageFactory imageFactory = new(preserveExifData: false);
-                                _ = imageFactory.Load(oldImagePath)
-                                         .Format(new WebPFormat())
-                                         .Quality(Quality)
-                                         .Save(webPFileStream);
-                            }
-                            catch (Exception)
-                            {
-
-                            }
-                            try
-                            {
-                                if (Deletion.Checked)
-                                {
-                                    File.Delete(Files[i]);
-                                }
-                            }
-                            catch (Exception)
-                            {
-
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Converted = Files[i];
-                    }
-                    //Creating folders and moving images
-                    string folderName = PathB.Text + "Kuvat";
-                    pathString1 = System.IO.Path.Combine(folderName, "Tuote-numero-" + FileN[i]);
-                    _ = System.IO.Directory.CreateDirectory(pathString1);
-
-                    separator = Converted;
-
-                    length = separator.Length;
-                    length--;
-
-                    //getting filename by running trough until hitting \
-                    FNameG();
-                    //Putting rigth filenames and reseting values
-                    filename1 = TempS;
-
-                    TempS = "";
-
-                    //Updating filepaths
-                    string sourcePath1 = Converted;
-                    sourceFile = System.IO.Path.Combine(sourcePath1);
-                    string destFile = System.IO.Path.Combine(pathString1, filename1);
-                    //Catching possible errors
-                    try
-                    {
-                        System.IO.File.Move(sourceFile, destFile);
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-
-                    if (SmallImages.Checked)
-                    {
-                        //Inserting small images to database
-                        OdbcDataAdapter adapter = new();
-                        string odbc = "INSERT INTO " + TableN.Text + " (TuoteNro, Tiedosto, Kuvateksti, Verkkokaupassa) VALUES('" + FileN[i] + "', '" + pathString1 + @"\" + filenameS + "', PikkuKuva, 0); ";
-                        command = new OdbcCommand(odbc, cnn);
-                        adapter.UpdateCommand = new OdbcCommand(odbc, cnn);
-                        try
-                        {
-                            _ = adapter.UpdateCommand.ExecuteNonQuery();
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine("<<< catch : " + ex.ToString());
-                        }
-                    }
-                    //Updating database
-                    adapter = new();
-                    odbc = "UPDATE " + TableN.Text + " SET Tiedosto = '" + pathString1 + @"\" + filename1 + "' Where Tiedosto = " + "'" + Files[i] + "'";
-                    command = new OdbcCommand(odbc, cnn);
-                    adapter.UpdateCommand = new OdbcCommand(odbc, cnn);
-                    try
-                    {
-                        _ = adapter.UpdateCommand.ExecuteNonQuery();
-                    }
-                    catch (Exception ex)
-                    {
-                        try
-                        {
-                            DProblem(ex);
-                        }
-                        catch
-                        {
-                            Thread.Sleep(1);
-                            DProblem(ex);
-                        }
-                    }
-                    command.Dispose();
-
-                    //Listbox colour change
-                    //https://stackoverflow.com/questions/2554609/c-sharp-changing-listbox-row-color
-
-                    filename1 = "";
-                    counter++;
-                    worker.ReportProgress(1 * 1);
-                }
-            }
-        }
-
         private void backgroundWorker1_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
             if (InputB.Items.Count > counter)
@@ -621,27 +414,15 @@ namespace ImageConverter
                         sw.WriteLine("");
                         Iteration = 1;
                 }
-                if (sender == backgroundWorker1)
-                {
                     sw.WriteLine("Moved " + filename + " from " + sourcePath + " to " + pathString);
                     sw.Close();
-                }
-                else if (sender == backgroundWorker2) 
-                {
-                    sw.WriteLine("Moved " + filename1 + " from " + sourcePath1 + " to " + pathString1);
-                    sw.Close();
-                }
             }
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            if (FTime == true)
-            {
-                FTime = false;
-            }
-            else if (FTime == false)
-            {
+            counter++;
+            Done.Text = counter.ToString();
                 timer1.Stop();
                 if (e.Error != null)
                 {
@@ -670,7 +451,6 @@ namespace ImageConverter
                 Connect.Enabled = true;
                 //Disabling Cancel
                 Cancel.Enabled = false;
-            }
         }
 
         #endregion
@@ -704,6 +484,16 @@ namespace ImageConverter
             TimeElapsed.Text = "Time elapsed: " + Timer;
         }
 
-        private Label TimeElapsed;
+        private void ImageConversion_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                cnn.Close();
+            }
+            catch
+            {
+
+            }
+        }
     }
 }

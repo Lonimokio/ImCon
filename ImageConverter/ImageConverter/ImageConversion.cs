@@ -65,7 +65,6 @@ namespace ImageConverter
             this.KuvaTeksti = new System.Windows.Forms.ListBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.TipConvert = new System.Windows.Forms.ToolTip(this.components);
-            this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.QualityB)).BeginInit();
             this.Convertion.SuspendLayout();
@@ -241,6 +240,11 @@ namespace ImageConverter
             this.QualityB.Size = new System.Drawing.Size(54, 23);
             this.QualityB.TabIndex = 20;
             this.TipConvert.SetToolTip(this.QualityB, "Set the quality of image % of original");
+            this.QualityB.Value = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
             this.QualityB.ValueChanged += new System.EventHandler(this.QualityB_ValueChanged);
             // 
             // DBName
@@ -377,7 +381,7 @@ namespace ImageConverter
             // TimeElapsed
             // 
             this.TimeElapsed.AutoSize = true;
-            this.TimeElapsed.Location = new System.Drawing.Point(54, 247);
+            this.TimeElapsed.Location = new System.Drawing.Point(40, 247);
             this.TimeElapsed.Name = "TimeElapsed";
             this.TimeElapsed.Size = new System.Drawing.Size(82, 15);
             this.TimeElapsed.TabIndex = 32;
@@ -436,14 +440,6 @@ namespace ImageConverter
             // 
             this.TipConvert.Popup += new System.Windows.Forms.PopupEventHandler(this.TipConvert_Popup);
             // 
-            // backgroundWorker2
-            // 
-            this.backgroundWorker2.WorkerReportsProgress = true;
-            this.backgroundWorker2.WorkerSupportsCancellation = true;
-            this.backgroundWorker2.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker2_DoWork);
-            this.backgroundWorker2.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
-            this.backgroundWorker2.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
-            // 
             // timer1
             // 
             this.timer1.Interval = 1000;
@@ -468,6 +464,7 @@ namespace ImageConverter
             this.MinimumSize = new System.Drawing.Size(825, 500);
             this.Name = "ImageConversion";
             this.Text = "ImCon";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ImageConversion_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.QualityB)).EndInit();
             this.Convertion.ResumeLayout(false);
@@ -511,8 +508,7 @@ namespace ImageConverter
         public BackgroundWorker backgroundWorker1;
         public ListBox InputB;
         public ListBox InputB2;
-        private BackgroundWorker backgroundWorker2;
         private System.Windows.Forms.Timer timer1;
-
+        private Label TimeElapsed;
     }
 }
