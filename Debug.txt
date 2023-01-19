@@ -1,7 +1,6 @@
 #Things to fix:
 
-Make program use background worker to increasee efficiency if possible add multitrheading capabilities
-Timer to tell how much operation took and how long it is potentially gonna take
+
 porcentage of being ready
 Advanced settings
 visual overhaul use multiple forms

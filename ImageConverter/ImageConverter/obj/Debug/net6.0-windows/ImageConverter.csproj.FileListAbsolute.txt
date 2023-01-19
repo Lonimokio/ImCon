@@ -62,3 +62,10 @@ C:\Coding\Visual_studio_C#\ImCon\ImageConverter\ImageConverter\obj\Debug\net6.0-
 C:\Coding\Visual_studio_C#\ImCon\ImageConverter\ImageConverter\obj\Debug\net6.0-windows\ImageConverter.pdb
 C:\Coding\Visual_studio_C#\ImCon\ImageConverter\ImageConverter\obj\Debug\net6.0-windows\ImageConverter.genruntimeconfig.cache
 C:\Coding\Visual_studio_C#\ImCon\ImageConverter\ImageConverter\obj\Debug\net6.0-windows\ref\ImageConverter.dll
+C:\Coding\Visual_studio_C#\ImCon\ImageConverter\ImageConverter\bin\Debug\net6.0-windows\HandyControl.dll
+C:\Coding\Visual_studio_C#\ImCon\ImageConverter\ImageConverter\obj\Debug\net6.0-windows\ImageConverter_MarkupCompile.cache
+C:\Coding\Visual_studio_C#\ImCon\ImageConverter\ImageConverter\obj\Debug\net6.0-windows\ImageConverter_MarkupCompile.lref
+C:\Coding\Visual_studio_C#\ImCon\ImageConverter\ImageConverter\obj\Debug\net6.0-windows\ImageConverter.g.resources
+C:\Coding\Visual_studio_C#\ImCon\ImageConverter\ImageConverter\obj\Debug\net6.0-windows\Main.g.cs
+C:\Coding\Visual_studio_C#\ImCon\ImageConverter\ImageConverter\obj\Debug\net6.0-windows\Main.baml
+C:\Coding\Visual_studio_C#\ImCon\ImageConverter\ImageConverter\bin\Debug\net6.0-windows\HandyControl.xml

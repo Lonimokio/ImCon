@@ -13,7 +13,8 @@
           "System.Data.Odbc": "7.0.0",
           "System.Drawing.Common": "7.0.0",
           "libwebp.v140": "0.5.0.2",
-          "libwebp.v140.redist": "0.5.0.1"
+          "libwebp.v140.redist": "0.5.0.1",
+          "HandyControl": "3.4.0.0"
         },
         "runtime": {
           "ImageConverter.dll": {}
@@ -139,7 +140,15 @@
           }
         }
       },
-      "System.ValueTuple/4.5.0": {}
+      "System.ValueTuple/4.5.0": {},
+      "HandyControl/3.4.0.0": {
+        "runtime": {
+          "HandyControl.dll": {
+            "assemblyVersion": "3.4.0.0",
+            "fileVersion": "3.4.0.0"
+          }
+        }
+      }
     }
   },
   "libraries": {
@@ -217,6 +226,11 @@
       "sha512": "sha512-okurQJO6NRE/apDIP23ajJ0hpiNmJ+f0BwOlB/cSqTLQlw5upkf+5+96+iG2Jw40G1fCVCyPz/FhIABUjMR+RQ==",
       "path": "system.valuetuple/4.5.0",
       "hashPath": "system.valuetuple.4.5.0.nupkg.sha512"
+    },
+    "HandyControl/3.4.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

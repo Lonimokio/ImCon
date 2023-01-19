@@ -8,6 +8,9 @@ using System.Xml.Linq;
 using System.Threading;
 using System.ComponentModel;
 using System.Linq;
+using System.IO;
+using System.Windows;
+using System.Windows.Forms.Integration;
 
 namespace ImageConverter
 {
@@ -42,15 +45,13 @@ namespace ImageConverter
         private int Iteration = 0;
         private int counter = 0;
         private int Left1;
-        OdbcCommand command;
-        OdbcDataReader dataReader;
-        OdbcConnection cnn;
-        OdbcDataAdapter adapter;
-        List<string> Files = new List<string>();
-        List<string> FileN = new List<string>();
-        List<string> FileK = new List<string>();
-        double CDouble;
-        bool FTime = true;
+        public OdbcCommand command;
+        public OdbcDataReader dataReader;
+        public OdbcConnection cnn;
+        public OdbcDataAdapter adapter;
+        public List<string> Files = new List<string>();
+        public List<string> FileN = new List<string>();
+        public List<string> FileK = new List<string>();
         //Variables abowe here
 
         public ImageConversion()
@@ -58,8 +59,9 @@ namespace ImageConverter
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void ImageConversion_Load(object sender, EventArgs e)
         {
+
             this.ActiveControl= Connect;
             try
             {
@@ -70,6 +72,13 @@ namespace ImageConverter
             {
 
             }
+        }
+        private void ImageConversion_Shown(object sender, EventArgs e)
+        {
+            Main Window1 = new Main();
+            ElementHost.EnableModelessKeyboardInterop(Window1);
+            Window1.Show();
+            this.Hide();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -189,13 +198,13 @@ namespace ImageConverter
                 }
                 catch
                 {
-                    MessageBox.Show("Invalid database or table name!", "Invalid input");
+                    System.Windows.Forms.MessageBox.Show("Invalid database or table name!", "Invalid input");
                 }
                 
             }
             else
             {
-                _ = MessageBox.Show("Invalid input!", "Invalid input!");
+                _ = System.Windows.Forms.MessageBox.Show("Invalid input!", "Invalid input!");
             }
         }
 
@@ -426,15 +435,15 @@ namespace ImageConverter
                 timer1.Stop();
                 if (e.Error != null)
                 {
-                    MessageBox.Show(e.Error.Message);
+                    System.Windows.Forms.MessageBox.Show(e.Error.Message);
                 }
                 else if (e.Cancelled)
                 {
-                    _ = MessageBox.Show("Cancelled. still moved and converted " + counter + " images");
+                    _ = System.Windows.Forms.MessageBox.Show("Cancelled. still moved and converted " + counter + " images");
                 }
                 else
                 {
-                    _ = MessageBox.Show("Done. Moved and converted " + counter + " images");
+                    _ = System.Windows.Forms.MessageBox.Show("Done. Moved and converted " + counter + " images");
                 }
                 ProgressB.Value = 0;
                 Left1 = 0;
@@ -495,5 +504,35 @@ namespace ImageConverter
 
             }
         }
+
+        private ListBox KuvaTeksti;
+        private Label label2;
+        private Label DoneL;
+        private Label label4;
+        private Label LeftL;
+        private Label Done;
+        private TextBox PathB;
+        private Label Left;
+        public ListBox InputB;
+        private Label label5;
+        private Label label1;
+        private Label SLabel;
+        public ListBox InputB2;
+        private Button Connect;
+        private CheckBox Deletion;
+        private Label FLabel;
+        private ProgressBar ProgressB;
+        private ComboBox TypeB;
+        private CheckBox SmallImages;
+        private ComboBox DBName;
+        private NumericUpDown QualityB;
+        private TextBox ConnectionBox;
+        private CheckBox checkBox3;
+        private Button convert;
+        private TextBox TableN;
+        private Button Cancel;
+        private Label label6;
+        private Label TimeElapsed;
+        private GroupBox Convertion;
     }
 }

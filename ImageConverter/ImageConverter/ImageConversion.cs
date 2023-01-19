@@ -31,56 +31,128 @@ namespace ImageConverter
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.convert = new System.Windows.Forms.Button();
-            this.TypeB = new System.Windows.Forms.ComboBox();
-            this.SLabel = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.Connect = new System.Windows.Forms.Button();
-            this.FLabel = new System.Windows.Forms.Label();
-            this.InputB = new System.Windows.Forms.ListBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.InputB2 = new System.Windows.Forms.ListBox();
-            this.Credits = new System.Windows.Forms.Label();
-            this.ProgressB = new System.Windows.Forms.ProgressBar();
-            this.Left = new System.Windows.Forms.Label();
-            this.Done = new System.Windows.Forms.Label();
-            this.DoneL = new System.Windows.Forms.Label();
-            this.LeftL = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.QualityB = new System.Windows.Forms.NumericUpDown();
-            this.DBName = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.ConnectionBox = new System.Windows.Forms.TextBox();
-            this.PathB = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.Deletion = new System.Windows.Forms.CheckBox();
-            this.SmallImages = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.Convertion = new System.Windows.Forms.GroupBox();
-            this.TimeElapsed = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.Cancel = new System.Windows.Forms.Button();
-            this.TableN = new System.Windows.Forms.TextBox();
-            this.KuvaTeksti = new System.Windows.Forms.ListBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.TipConvert = new System.Windows.Forms.ToolTip(this.components);
+            this.PathB = new System.Windows.Forms.TextBox();
+            this.InputB = new System.Windows.Forms.ListBox();
+            this.InputB2 = new System.Windows.Forms.ListBox();
+            this.Connect = new System.Windows.Forms.Button();
+            this.Deletion = new System.Windows.Forms.CheckBox();
+            this.ProgressB = new System.Windows.Forms.ProgressBar();
+            this.TypeB = new System.Windows.Forms.ComboBox();
+            this.SmallImages = new System.Windows.Forms.CheckBox();
+            this.DBName = new System.Windows.Forms.ComboBox();
+            this.QualityB = new System.Windows.Forms.NumericUpDown();
+            this.ConnectionBox = new System.Windows.Forms.TextBox();
+            this.convert = new System.Windows.Forms.Button();
+            this.TableN = new System.Windows.Forms.TextBox();
+            this.Cancel = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.KuvaTeksti = new System.Windows.Forms.ListBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.DoneL = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.LeftL = new System.Windows.Forms.Label();
+            this.Done = new System.Windows.Forms.Label();
+            this.Left = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.SLabel = new System.Windows.Forms.Label();
+            this.FLabel = new System.Windows.Forms.Label();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.TimeElapsed = new System.Windows.Forms.Label();
+            this.Convertion = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.QualityB)).BeginInit();
             this.Convertion.SuspendLayout();
             this.SuspendLayout();
             // 
-            // convert
+            // label3
             // 
-            this.convert.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.convert.Location = new System.Drawing.Point(227, 141);
-            this.convert.Name = "convert";
-            this.convert.Size = new System.Drawing.Size(213, 80);
-            this.convert.TabIndex = 0;
-            this.convert.Text = "Convert";
-            this.TipConvert.SetToolTip(this.convert, "Begin convertion progress");
-            this.convert.UseVisualStyleBackColor = true;
-            this.convert.Click += new System.EventHandler(this.convert_Click);
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label3.Location = new System.Drawing.Point(12, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(167, 65);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "ImCon";
+            // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.WorkerReportsProgress = true;
+            this.backgroundWorker1.WorkerSupportsCancellation = true;
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
+            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
+            // 
+            // TipConvert
+            // 
+            this.TipConvert.Popup += new System.Windows.Forms.PopupEventHandler(this.TipConvert_Popup);
+            // 
+            // PathB
+            // 
+            this.PathB.Location = new System.Drawing.Point(286, 240);
+            this.PathB.Name = "PathB";
+            this.PathB.Size = new System.Drawing.Size(100, 23);
+            this.PathB.TabIndex = 25;
+            this.PathB.Text = "C:\\winskj\\";
+            this.PathB.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TipConvert.SetToolTip(this.PathB, "Type in path you want pictures\r\nto be saved into");
+            // 
+            // InputB
+            // 
+            this.InputB.FormattingEnabled = true;
+            this.InputB.HorizontalScrollbar = true;
+            this.InputB.ItemHeight = 15;
+            this.InputB.Location = new System.Drawing.Point(26, 41);
+            this.InputB.Name = "InputB";
+            this.InputB.Size = new System.Drawing.Size(120, 94);
+            this.InputB.TabIndex = 10;
+            this.TipConvert.SetToolTip(this.InputB, "Image locations");
+            // 
+            // InputB2
+            // 
+            this.InputB2.FormattingEnabled = true;
+            this.InputB2.ItemHeight = 15;
+            this.InputB2.Location = new System.Drawing.Point(26, 134);
+            this.InputB2.Name = "InputB2";
+            this.InputB2.Size = new System.Drawing.Size(120, 94);
+            this.InputB2.TabIndex = 12;
+            this.TipConvert.SetToolTip(this.InputB2, "Product numbers");
+            // 
+            // Connect
+            // 
+            this.Connect.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Connect.Location = new System.Drawing.Point(597, 152);
+            this.Connect.Name = "Connect";
+            this.Connect.Size = new System.Drawing.Size(101, 43);
+            this.Connect.TabIndex = 6;
+            this.Connect.Text = "Connect";
+            this.TipConvert.SetToolTip(this.Connect, "Connect to selected database\r\nand search selected table");
+            this.Connect.UseVisualStyleBackColor = true;
+            this.Connect.Click += new System.EventHandler(this.Connect_Click);
+            // 
+            // Deletion
+            // 
+            this.Deletion.AutoSize = true;
+            this.Deletion.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Deletion.Location = new System.Drawing.Point(446, 140);
+            this.Deletion.Name = "Deletion";
+            this.Deletion.Size = new System.Drawing.Size(108, 17);
+            this.Deletion.TabIndex = 27;
+            this.Deletion.Text = "Enable Deletion";
+            this.TipConvert.SetToolTip(this.Deletion, "Deletes old images after moving them");
+            this.Deletion.UseVisualStyleBackColor = true;
+            // 
+            // ProgressB
+            // 
+            this.ProgressB.ForeColor = System.Drawing.Color.Red;
+            this.ProgressB.Location = new System.Drawing.Point(26, 224);
+            this.ProgressB.Name = "ProgressB";
+            this.ProgressB.Size = new System.Drawing.Size(120, 23);
+            this.ProgressB.TabIndex = 14;
+            this.TipConvert.SetToolTip(this.ProgressB, "Progress bar");
             // 
             // TypeB
             // 
@@ -96,142 +168,27 @@ namespace ImageConverter
             this.TipConvert.SetToolTip(this.TypeB, "Choose the format you want to use");
             this.TypeB.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
-            // SLabel
+            // SmallImages
             // 
-            this.SLabel.AutoSize = true;
-            this.SLabel.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.SLabel.Location = new System.Drawing.Point(181, 56);
-            this.SLabel.Name = "SLabel";
-            this.SLabel.Size = new System.Drawing.Size(317, 30);
-            this.SLabel.TabIndex = 2;
-            this.SLabel.Text = "What format to be converted to?";
+            this.SmallImages.AutoSize = true;
+            this.SmallImages.Location = new System.Drawing.Point(446, 165);
+            this.SmallImages.Name = "SmallImages";
+            this.SmallImages.Size = new System.Drawing.Size(133, 19);
+            this.SmallImages.TabIndex = 28;
+            this.SmallImages.Text = "Enable small images";
+            this.TipConvert.SetToolTip(this.SmallImages, "Generate small image in case support for webp is limited");
+            this.SmallImages.UseVisualStyleBackColor = true;
             // 
-            // label3
+            // DBName
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label3.Location = new System.Drawing.Point(12, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(167, 65);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "ImCon";
-            // 
-            // Connect
-            // 
-            this.Connect.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Connect.Location = new System.Drawing.Point(597, 152);
-            this.Connect.Name = "Connect";
-            this.Connect.Size = new System.Drawing.Size(101, 43);
-            this.Connect.TabIndex = 6;
-            this.Connect.Text = "Connect";
-            this.TipConvert.SetToolTip(this.Connect, "Connect to selected database\r\nand search selected table");
-            this.Connect.UseVisualStyleBackColor = true;
-            this.Connect.Click += new System.EventHandler(this.Connect_Click);
-            // 
-            // FLabel
-            // 
-            this.FLabel.AutoSize = true;
-            this.FLabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.FLabel.Location = new System.Drawing.Point(592, 110);
-            this.FLabel.Name = "FLabel";
-            this.FLabel.Size = new System.Drawing.Size(110, 17);
-            this.FLabel.TabIndex = 8;
-            this.FLabel.Text = "Choose database";
-            // 
-            // InputB
-            // 
-            this.InputB.FormattingEnabled = true;
-            this.InputB.HorizontalScrollbar = true;
-            this.InputB.ItemHeight = 15;
-            this.InputB.Location = new System.Drawing.Point(26, 41);
-            this.InputB.Name = "InputB";
-            this.InputB.Size = new System.Drawing.Size(120, 94);
-            this.InputB.TabIndex = 10;
-            this.TipConvert.SetToolTip(this.InputB, "Image locations");
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(54, 23);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(45, 15);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "Images";
-            // 
-            // InputB2
-            // 
-            this.InputB2.FormattingEnabled = true;
-            this.InputB2.ItemHeight = 15;
-            this.InputB2.Location = new System.Drawing.Point(26, 134);
-            this.InputB2.Name = "InputB2";
-            this.InputB2.Size = new System.Drawing.Size(120, 94);
-            this.InputB2.TabIndex = 12;
-            this.TipConvert.SetToolTip(this.InputB2, "Product numbers");
-            // 
-            // Credits
-            // 
-            this.Credits.AutoSize = true;
-            this.Credits.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.Credits.ForeColor = System.Drawing.Color.DarkGreen;
-            this.Credits.Location = new System.Drawing.Point(597, 396);
-            this.Credits.Name = "Credits";
-            this.Credits.Size = new System.Drawing.Size(191, 45);
-            this.Credits.TabIndex = 13;
-            this.Credits.Text = "Alpha 1.1.0\r\nIntelectual property of Arttu Mutka\r\nOriginal idea by Petri Kaija";
-            this.TipConvert.SetToolTip(this.Credits, "Version and credits");
-            // 
-            // ProgressB
-            // 
-            this.ProgressB.ForeColor = System.Drawing.Color.Red;
-            this.ProgressB.Location = new System.Drawing.Point(26, 224);
-            this.ProgressB.Name = "ProgressB";
-            this.ProgressB.Size = new System.Drawing.Size(120, 23);
-            this.ProgressB.TabIndex = 14;
-            this.TipConvert.SetToolTip(this.ProgressB, "Progress bar");
-            // 
-            // Left
-            // 
-            this.Left.AutoSize = true;
-            this.Left.Location = new System.Drawing.Point(269, 29);
-            this.Left.Name = "Left";
-            this.Left.Size = new System.Drawing.Size(13, 15);
-            this.Left.TabIndex = 15;
-            this.Left.Text = "0";
-            // 
-            // Done
-            // 
-            this.Done.AutoSize = true;
-            this.Done.Location = new System.Drawing.Point(381, 29);
-            this.Done.Name = "Done";
-            this.Done.Size = new System.Drawing.Size(13, 15);
-            this.Done.TabIndex = 16;
-            this.Done.Text = "0";
-            // 
-            // DoneL
-            // 
-            this.DoneL.AutoSize = true;
-            this.DoneL.Location = new System.Drawing.Point(371, 12);
-            this.DoneL.Name = "DoneL";
-            this.DoneL.Size = new System.Drawing.Size(35, 15);
-            this.DoneL.TabIndex = 18;
-            this.DoneL.Text = "Done";
-            // 
-            // LeftL
-            // 
-            this.LeftL.AutoSize = true;
-            this.LeftL.Location = new System.Drawing.Point(264, 12);
-            this.LeftL.Name = "LeftL";
-            this.LeftL.Size = new System.Drawing.Size(27, 15);
-            this.LeftL.TabIndex = 17;
-            this.LeftL.Text = "Left";
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.panel1.Location = new System.Drawing.Point(-6, 388);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(817, 89);
-            this.panel1.TabIndex = 19;
+            this.DBName.FormattingEnabled = true;
+            this.DBName.Items.AddRange(new object[] {
+            "SKJ"});
+            this.DBName.Location = new System.Drawing.Point(597, 130);
+            this.DBName.Name = "DBName";
+            this.DBName.Size = new System.Drawing.Size(101, 23);
+            this.DBName.TabIndex = 21;
+            this.TipConvert.SetToolTip(this.DBName, "Choose your database");
             // 
             // QualityB
             // 
@@ -247,35 +204,6 @@ namespace ImageConverter
             0});
             this.QualityB.ValueChanged += new System.EventHandler(this.QualityB_ValueChanged);
             // 
-            // DBName
-            // 
-            this.DBName.FormattingEnabled = true;
-            this.DBName.Items.AddRange(new object[] {
-            "SKJ"});
-            this.DBName.Location = new System.Drawing.Point(597, 130);
-            this.DBName.Name = "DBName";
-            this.DBName.Size = new System.Drawing.Size(101, 23);
-            this.DBName.TabIndex = 21;
-            this.TipConvert.SetToolTip(this.DBName, "Choose your database");
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(280, 94);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(45, 15);
-            this.label2.TabIndex = 22;
-            this.label2.Text = "Format";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(341, 94);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(45, 15);
-            this.label4.TabIndex = 23;
-            this.label4.Text = "Quality";
-            // 
             // ConnectionBox
             // 
             this.ConnectionBox.Enabled = false;
@@ -286,15 +214,108 @@ namespace ImageConverter
             this.ConnectionBox.Text = "Connected to: ";
             this.TipConvert.SetToolTip(this.ConnectionBox, "Your currently connected to this server");
             // 
-            // PathB
+            // convert
             // 
-            this.PathB.Location = new System.Drawing.Point(286, 240);
-            this.PathB.Name = "PathB";
-            this.PathB.Size = new System.Drawing.Size(100, 23);
-            this.PathB.TabIndex = 25;
-            this.PathB.Text = "C:\\winskj\\";
-            this.PathB.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TipConvert.SetToolTip(this.PathB, "Type in path you want pictures\r\nto be saved into");
+            this.convert.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.convert.Location = new System.Drawing.Point(227, 141);
+            this.convert.Name = "convert";
+            this.convert.Size = new System.Drawing.Size(213, 80);
+            this.convert.TabIndex = 0;
+            this.convert.Text = "Convert";
+            this.TipConvert.SetToolTip(this.convert, "Begin convertion progress");
+            this.convert.UseVisualStyleBackColor = true;
+            this.convert.Click += new System.EventHandler(this.convert_Click);
+            // 
+            // TableN
+            // 
+            this.TableN.Location = new System.Drawing.Point(598, 229);
+            this.TableN.Name = "TableN";
+            this.TableN.Size = new System.Drawing.Size(100, 23);
+            this.TableN.TabIndex = 30;
+            this.TableN.Text = "TUOTEKUV";
+            this.TableN.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TipConvert.SetToolTip(this.TableN, "Select the table you want to use\r\n(Note might not work with small images)");
+            // 
+            // Cancel
+            // 
+            this.Cancel.Enabled = false;
+            this.Cancel.Location = new System.Drawing.Point(446, 239);
+            this.Cancel.Name = "Cancel";
+            this.Cancel.Size = new System.Drawing.Size(75, 23);
+            this.Cancel.TabIndex = 31;
+            this.Cancel.Text = "Cancel";
+            this.TipConvert.SetToolTip(this.Cancel, "Cancel operation");
+            this.Cancel.UseVisualStyleBackColor = true;
+            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // KuvaTeksti
+            // 
+            this.KuvaTeksti.FormattingEnabled = true;
+            this.KuvaTeksti.ItemHeight = 15;
+            this.KuvaTeksti.Location = new System.Drawing.Point(26, 42);
+            this.KuvaTeksti.Name = "KuvaTeksti";
+            this.KuvaTeksti.Size = new System.Drawing.Size(120, 94);
+            this.KuvaTeksti.TabIndex = 30;
+            this.KuvaTeksti.Visible = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(280, 94);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(45, 15);
+            this.label2.TabIndex = 22;
+            this.label2.Text = "Format";
+            // 
+            // DoneL
+            // 
+            this.DoneL.AutoSize = true;
+            this.DoneL.Location = new System.Drawing.Point(371, 12);
+            this.DoneL.Name = "DoneL";
+            this.DoneL.Size = new System.Drawing.Size(35, 15);
+            this.DoneL.TabIndex = 18;
+            this.DoneL.Text = "Done";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(341, 94);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(45, 15);
+            this.label4.TabIndex = 23;
+            this.label4.Text = "Quality";
+            // 
+            // LeftL
+            // 
+            this.LeftL.AutoSize = true;
+            this.LeftL.Location = new System.Drawing.Point(264, 12);
+            this.LeftL.Name = "LeftL";
+            this.LeftL.Size = new System.Drawing.Size(27, 15);
+            this.LeftL.TabIndex = 17;
+            this.LeftL.Text = "Left";
+            // 
+            // Done
+            // 
+            this.Done.AutoSize = true;
+            this.Done.Location = new System.Drawing.Point(381, 29);
+            this.Done.Name = "Done";
+            this.Done.Size = new System.Drawing.Size(13, 15);
+            this.Done.TabIndex = 16;
+            this.Done.Text = "0";
+            // 
+            // Left
+            // 
+            this.Left.AutoSize = true;
+            this.Left.Location = new System.Drawing.Point(269, 29);
+            this.Left.Name = "Left";
+            this.Left.Size = new System.Drawing.Size(13, 15);
+            this.Left.TabIndex = 15;
+            this.Left.Text = "0";
             // 
             // label5
             // 
@@ -305,28 +326,34 @@ namespace ImageConverter
             this.label5.TabIndex = 26;
             this.label5.Text = "Save path";
             // 
-            // Deletion
+            // label1
             // 
-            this.Deletion.AutoSize = true;
-            this.Deletion.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.Deletion.Location = new System.Drawing.Point(446, 140);
-            this.Deletion.Name = "Deletion";
-            this.Deletion.Size = new System.Drawing.Size(108, 17);
-            this.Deletion.TabIndex = 27;
-            this.Deletion.Text = "Enable Deletion";
-            this.TipConvert.SetToolTip(this.Deletion, "Deletes old images after moving them");
-            this.Deletion.UseVisualStyleBackColor = true;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(54, 23);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(45, 15);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Images";
             // 
-            // SmallImages
+            // SLabel
             // 
-            this.SmallImages.AutoSize = true;
-            this.SmallImages.Location = new System.Drawing.Point(446, 165);
-            this.SmallImages.Name = "SmallImages";
-            this.SmallImages.Size = new System.Drawing.Size(133, 19);
-            this.SmallImages.TabIndex = 28;
-            this.SmallImages.Text = "Enable small images";
-            this.TipConvert.SetToolTip(this.SmallImages, "Generate small image in case support for webp is limited");
-            this.SmallImages.UseVisualStyleBackColor = true;
+            this.SLabel.AutoSize = true;
+            this.SLabel.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.SLabel.Location = new System.Drawing.Point(181, 56);
+            this.SLabel.Name = "SLabel";
+            this.SLabel.Size = new System.Drawing.Size(317, 30);
+            this.SLabel.TabIndex = 2;
+            this.SLabel.Text = "What format to be converted to?";
+            // 
+            // FLabel
+            // 
+            this.FLabel.AutoSize = true;
+            this.FLabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.FLabel.Location = new System.Drawing.Point(592, 110);
+            this.FLabel.Name = "FLabel";
+            this.FLabel.Size = new System.Drawing.Size(110, 17);
+            this.FLabel.TabIndex = 8;
+            this.FLabel.Text = "Choose database";
             // 
             // checkBox3
             // 
@@ -337,6 +364,24 @@ namespace ImageConverter
             this.checkBox3.TabIndex = 29;
             this.checkBox3.Text = "Placeholder";
             this.checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(613, 213);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(67, 15);
+            this.label6.TabIndex = 31;
+            this.label6.Text = "Table name";
+            // 
+            // TimeElapsed
+            // 
+            this.TimeElapsed.AutoSize = true;
+            this.TimeElapsed.Location = new System.Drawing.Point(40, 247);
+            this.TimeElapsed.Name = "TimeElapsed";
+            this.TimeElapsed.Size = new System.Drawing.Size(82, 15);
+            this.TimeElapsed.TabIndex = 32;
+            this.TimeElapsed.Text = "Time elapsed: ";
             // 
             // Convertion
             // 
@@ -378,73 +423,6 @@ namespace ImageConverter
             this.Convertion.TabStop = false;
             this.Convertion.Text = "Convertion";
             // 
-            // TimeElapsed
-            // 
-            this.TimeElapsed.AutoSize = true;
-            this.TimeElapsed.Location = new System.Drawing.Point(40, 247);
-            this.TimeElapsed.Name = "TimeElapsed";
-            this.TimeElapsed.Size = new System.Drawing.Size(82, 15);
-            this.TimeElapsed.TabIndex = 32;
-            this.TimeElapsed.Text = "Time elapsed: ";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(613, 213);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(67, 15);
-            this.label6.TabIndex = 31;
-            this.label6.Text = "Table name";
-            // 
-            // Cancel
-            // 
-            this.Cancel.Enabled = false;
-            this.Cancel.Location = new System.Drawing.Point(446, 239);
-            this.Cancel.Name = "Cancel";
-            this.Cancel.Size = new System.Drawing.Size(75, 23);
-            this.Cancel.TabIndex = 31;
-            this.Cancel.Text = "Cancel";
-            this.TipConvert.SetToolTip(this.Cancel, "Cancel operation");
-            this.Cancel.UseVisualStyleBackColor = true;
-            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
-            // 
-            // TableN
-            // 
-            this.TableN.Location = new System.Drawing.Point(598, 229);
-            this.TableN.Name = "TableN";
-            this.TableN.Size = new System.Drawing.Size(100, 23);
-            this.TableN.TabIndex = 30;
-            this.TableN.Text = "TUOTEKUV";
-            this.TableN.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TipConvert.SetToolTip(this.TableN, "Select the table you want to use\r\n(Note might not work with small images)");
-            // 
-            // KuvaTeksti
-            // 
-            this.KuvaTeksti.FormattingEnabled = true;
-            this.KuvaTeksti.ItemHeight = 15;
-            this.KuvaTeksti.Location = new System.Drawing.Point(26, 42);
-            this.KuvaTeksti.Name = "KuvaTeksti";
-            this.KuvaTeksti.Size = new System.Drawing.Size(120, 94);
-            this.KuvaTeksti.TabIndex = 30;
-            this.KuvaTeksti.Visible = false;
-            // 
-            // backgroundWorker1
-            // 
-            this.backgroundWorker1.WorkerReportsProgress = true;
-            this.backgroundWorker1.WorkerSupportsCancellation = true;
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
-            this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
-            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
-            // 
-            // TipConvert
-            // 
-            this.TipConvert.Popup += new System.Windows.Forms.PopupEventHandler(this.TipConvert_Popup);
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 1000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
             // ImageConversion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -452,8 +430,6 @@ namespace ImageConverter
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(809, 461);
             this.Controls.Add(this.Convertion);
-            this.Controls.Add(this.Credits);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.label3);
             this.DoubleBuffered = true;
             this.ForeColor = System.Drawing.Color.DarkGreen;
@@ -465,7 +441,8 @@ namespace ImageConverter
             this.Name = "ImageConversion";
             this.Text = "ImCon";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ImageConversion_FormClosing);
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.ImageConversion_Load);
+            this.Shown += new System.EventHandler(this.ImageConversion_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.QualityB)).EndInit();
             this.Convertion.ResumeLayout(false);
             this.Convertion.PerformLayout();
@@ -475,40 +452,8 @@ namespace ImageConverter
         }
 
         #endregion
-
-        private Button convert;
-        private ComboBox TypeB;
-        private Label SLabel;
         private Label label3;
-        private Button Connect;
-        private Label FLabel;
-        private Label label1;
-        private Label Credits;
-        private ProgressBar ProgressB;
-        private new Label Left;
-        private Label Done;
-        private Label DoneL;
-        private Label LeftL;
-        private Panel panel1;
-        private NumericUpDown QualityB;
-        private ComboBox DBName;
-        private Label label2;
-        private Label label4;
-        private TextBox ConnectionBox;
-        private TextBox PathB;
-        private Label label5;
-        private CheckBox Deletion;
-        private CheckBox SmallImages;
-        private CheckBox checkBox3;
-        private GroupBox Convertion;
-        private TextBox TableN;
-        private Label label6;
-        private ListBox KuvaTeksti;
-        private Button Cancel;
         public BackgroundWorker backgroundWorker1;
-        public ListBox InputB;
-        public ListBox InputB2;
         private System.Windows.Forms.Timer timer1;
-        private Label TimeElapsed;
     }
 }
