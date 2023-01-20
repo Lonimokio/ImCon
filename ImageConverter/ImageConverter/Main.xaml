@@ -4,10 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ImageConverter"
-        xmlns:hc="https://handyorg.github.io/handycontrol" x:Class="ImageConverter.Main"
+        xmlns:hc="https://handyorg.github.io/handycontrol" x:Name="ImCon" x:Class="ImageConverter.Main"
         mc:Ignorable="d"
-        Title="ImCon" Height="470" Width="820" MinHeight="450" MinWidth="800"
-        Loaded="Window_Loaded">
+        Title="ImCon"
+        Loaded="Window_Loaded" MinWidth="845.97" MaxWidth="845.97" MinHeight="477.88" MaxHeight="500.9">
     <Grid Background="#FF212020">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="139*"/>
@@ -28,62 +28,6 @@
                             <RowDefinition/>
                             <RowDefinition Height="0*"/>
                         </Grid.RowDefinitions>
-
-                        <Border x:Name="FormatBox" BorderBrush="#FF191818" BorderThickness="1" CornerRadius="20" Margin="297,282,298,-26" Background="#FF1B1A1A" RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2">
-                            <Border.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform Angle="90"/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </Border.RenderTransform>
-                            <Grid Margin="0,1,0,-1">
-                                <Grid Margin="-3,17,3,72">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="13" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="13" />
-                                        <RowDefinition Height="13" />
-                                    </Grid.RowDefinitions>
-                                    <TextBox x:Name="QualityB"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" PreviewKeyDown="NUDTextBox_PreviewKeyDown" PreviewKeyUp="NUDTextBox_PreviewKeyUp" TextChanged="NUDTextBox_TextChanged" Margin="34,0,0,-18"/>
-                                    <RepeatButton x:Name="NUDButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="NUDButtonUP_Click" Margin="0,0,0,4" Grid.RowSpan="2" Content="5"/>
-                                    <RepeatButton x:Name="NUDButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="NUDButtonDown_Click" Margin="0,8,0,-18" Content="6"/>
-                                </Grid>
-                                <Label x:Name="SaveP_Copy" Content="Format" HorizontalAlignment="Left" Margin="-3,80,0,0" VerticalAlignment="Top" Foreground="#FF136930" Height="26" Width="50" HorizontalContentAlignment="Center" RenderTransformOrigin="0.5,0.5">
-                                    <Label.RenderTransform>
-                                        <TransformGroup>
-                                            <ScaleTransform/>
-                                            <SkewTransform/>
-                                            <RotateTransform Angle="-90"/>
-                                            <TranslateTransform/>
-                                        </TransformGroup>
-                                    </Label.RenderTransform>
-                                </Label>
-                                <ComboBox x:Name="TypeB" HorizontalAlignment="Left" Margin="14,85,0,0" VerticalAlignment="Top" Width="47" Height="14" RenderTransformOrigin="0.5,0.5" Text="webp" ToolTip="Set the format to be used in the conversion">
-                                    <ComboBox.RenderTransform>
-                                        <TransformGroup>
-                                            <ScaleTransform/>
-                                            <SkewTransform/>
-                                            <RotateTransform Angle="-90"/>
-                                            <TranslateTransform/>
-                                        </TransformGroup>
-                                    </ComboBox.RenderTransform>
-                                </ComboBox>
-                                <Label x:Name="SaveP_Copy1" Content="Quality" HorizontalAlignment="Left" Margin="-1,27,0,0" VerticalAlignment="Top" Foreground="#FF136930" Height="26" Width="50" HorizontalContentAlignment="Center" RenderTransformOrigin="0.5,0.5">
-                                    <Label.RenderTransform>
-                                        <TransformGroup>
-                                            <ScaleTransform/>
-                                            <SkewTransform/>
-                                            <RotateTransform Angle="-90"/>
-                                            <TranslateTransform/>
-                                        </TransformGroup>
-                                    </Label.RenderTransform>
-                                </Label>
-                            </Grid>
-                        </Border>
 
                         <Expander x:Name="DBExpander" HorizontalAlignment="Left" Height="395" Header="" Margin="7,-4,0,0" VerticalAlignment="Top" Width="640" RenderTransformOrigin="0.5,0.5" Expanded="Expander_Expanded" Collapsed="Expander_Collapsed" d:IsHidden="True">
                             <Expander.RenderTransform>
@@ -108,11 +52,11 @@
 
                         <Border x:Name="DBCBox" BorderBrush="#FF191818" BorderThickness="1" CornerRadius="20" Width="124" Margin="501,238,32,10" Background="#FF1B1A1A">
                             <Grid Margin="0,-9,0,9">
-                                <Label Content="Table name" HorizontalAlignment="Left" Margin="15,55,0,0" VerticalAlignment="Top" Foreground="#FF136930" Height="27" Width="98" HorizontalContentAlignment="Center"/>
-                                <Label Content="Database name" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF136930" Height="27" Width="98" Margin="15,10,0,0"/>
-                                <Button x:Name="Connect" Content="Connect" HorizontalAlignment="Left" Height="27" Margin="14,103,0,0" VerticalAlignment="Top" Width="98" Foreground="#FF13692A" BorderBrush="#FF1C4328" Background="#FF212020" Click="Button_Click"/>
-                                <ComboBox x:Name="DBName" HorizontalAlignment="Left" Margin="15,37,0,0" VerticalAlignment="Top" Width="97" Height="18"/>
-                                <TextBox x:Name="TableName" HorizontalAlignment="Left" Margin="15,80,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Text="TUOTEKUV" HorizontalContentAlignment="Center"/>
+                                <Label Content="Table name" HorizontalAlignment="Center" Margin="0,55,0,0" VerticalAlignment="Top" Foreground="#FF136930" Height="27" Width="98" HorizontalContentAlignment="Center"/>
+                                <Label Content="Database name" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#FF136930" Height="27" Width="98" Margin="0,10,0,0"/>
+                                <Button x:Name="Connect" Content="Connect" HorizontalAlignment="Center" Height="27" Margin="0,103,0,0" VerticalAlignment="Top" Width="98" Foreground="#FF13692A" BorderBrush="#FF1C4328" Background="#FF212020" Click="Button_Click"/>
+                                <ComboBox x:Name="DBName" HorizontalAlignment="Center" Margin="0,37,0,0" VerticalAlignment="Top" Width="97" Height="18"/>
+                                <TextBox x:Name="TableName" HorizontalAlignment="Center" Margin="0,80,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Text="TUOTEKUV" HorizontalContentAlignment="Center" TextChanged="TableName_TextChanged"/>
 
                             </Grid>
                         </Border>
@@ -150,13 +94,83 @@
                                 </LinearGradientBrush>
                             </Button.Background>
                         </Button>
-                        <Border x:Name="SettingsDBB" BorderBrush="#FF191818" BorderThickness="1" CornerRadius="20" Margin="26,230,501,17" Background="#FF1B1A1A">
+                        <Border x:Name="SettingsDBB" BorderBrush="#FF191818" BorderThickness="1" CornerRadius="20" Margin="26,220,507,17" Background="#FF1B1A1A">
                             <Grid Margin="0,-9,-7,9">
-                                <Label x:Name="SaveP" Content="Save path " HorizontalAlignment="Left" Margin="10,44,0,0" VerticalAlignment="Top" Foreground="#FF136930" Height="27" Width="98" HorizontalContentAlignment="Center"/>
-                                <TextBox x:Name="PathB" HorizontalAlignment="Left" Margin="10,71,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Text="C:\winskj\" HorizontalContentAlignment="Center"/>
-                                <CheckBox x:Name="SmallImages" Content="Make small images" HorizontalAlignment="Left" Margin="3,98,0,0" VerticalAlignment="Top" Background="White" BorderBrush="#FF184B26" Foreground="#FF15642F" ToolTip="If checked will generate small images that are good when you have a website software that doesnt support webp for example." Width="122" Checked="SmallImages_Checked" Unchecked="SmallImages_Unchecked"/>
-                                <CheckBox x:Name="Deletion" Content="Keep old images" HorizontalAlignment="Left" Margin="3,118,0,0" VerticalAlignment="Top" Background="White" BorderBrush="#FF184B26" Foreground="#FF15642F" ToolTip="If checked will not preserve images in old format" Width="119" Checked="Deletion_Checked" Unchecked="Deletion_Unchecked"/>
-                                <CheckBox x:Name="MoveI" Content="Move images" HorizontalAlignment="Left" Margin="6,29,0,0" VerticalAlignment="Top" Background="White" BorderBrush="#FF184B26" Foreground="#FF15642F" ToolTip="If checked will move images to folders" Width="118" IsChecked="True" Checked="MoveI_Checked" Unchecked="MoveI_Unchecked"/>
+                                <Grid>
+                                <Label x:Name="SaveP" Content="Save paths" HorizontalAlignment="Left" Margin="17,10,0,0" VerticalAlignment="Top" Foreground="#FF136930" Height="27" Width="98" HorizontalContentAlignment="Center"/>
+                                <TextBox x:Name="PathB" HorizontalAlignment="Left" Margin="17,55,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Text="C:\winskj\" HorizontalContentAlignment="Center" TextChanged="PathB_TextChanged" ToolTip="Path name where images will be put into"/>
+                                <TextBox x:Name="FolderName" HorizontalAlignment="Left" Margin="17,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Text="Kuvat" HorizontalContentAlignment="Center" TextChanged="PathB_TextChanged" ToolTip="Folder name where images will be saved"/>
+                                <TextBox x:Name="FileNames" HorizontalAlignment="Left" Margin="17,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Text="Tuote-numero-" HorizontalContentAlignment="Center" TextChanged="PathB_TextChanged" ToolTip="Image file names"/>
+                                </Grid>
+                                <CheckBox x:Name="SmallImages" Content="Make small images" HorizontalAlignment="Left" Margin="10,122,0,0" VerticalAlignment="Top" Background="White" BorderBrush="#FF184B26" Foreground="#FF15642F" ToolTip="If checked will generate small images that are good when you have a website software that doesnt support webp for example." Width="122" Checked="SmallImages_Checked" Unchecked="SmallImages_Unchecked"/>
+                                <CheckBox x:Name="Deletion" Content="Keep old images" HorizontalAlignment="Left" Margin="10,142,0,0" VerticalAlignment="Top" Background="White" BorderBrush="#FF184B26" Foreground="#FF15642F" ToolTip="If checked will not preserve images in old format" Width="119" Checked="Deletion_Checked" Unchecked="Deletion_Unchecked"/>
+                                <CheckBox x:Name="MoveI" Content="Move images" HorizontalAlignment="Left" Margin="10,102,0,0" VerticalAlignment="Top" Background="White" BorderBrush="#FF184B26" Foreground="#FF15642F" ToolTip="If checked will move images to folders" Width="118" IsChecked="True" Checked="MoveI_Checked" Unchecked="MoveI_Unchecked"/>
+                            </Grid>
+                        </Border>
+                        <Border x:Name="FormatBox" BorderBrush="#FF191818" BorderThickness="1" CornerRadius="20" Margin="309,285,300,-29" Background="#FF1B1A1A" RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2">
+                            <Border.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="90"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Border.RenderTransform>
+                            <Grid Margin="0,1,0,-1">
+                                <Label x:Name="SaveP_Copy" Content="Format" HorizontalAlignment="Left" Margin="-8,89,0,0" VerticalAlignment="Top" Foreground="#FF136930" Height="26" Width="50" HorizontalContentAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                    <Label.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform Angle="-90"/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </Label.RenderTransform>
+                                </Label>
+
+                                <ComboBox x:Name="TypeB" HorizontalAlignment="Left" Margin="9,94,0,0" VerticalAlignment="Top" Width="47" Height="14" RenderTransformOrigin="0.5,0.5" Text="webp" ToolTip="Set the format to be used in the conversion">
+                                    <ComboBoxItem Content="wepb"/>
+                                    <ComboBoxItem Content="Jpg (WIP)"/>
+                                    <ComboBoxItem Content="Png (WIP)"/>
+                                    <ComboBox.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform Angle="-90"/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </ComboBox.RenderTransform>
+                                </ComboBox>
+                                <Label x:Name="SaveP_Copy1" Content="Quality" HorizontalAlignment="Left" Margin="-7,37,0,0" VerticalAlignment="Top" Foreground="#FF136930" Height="26" Width="50" HorizontalContentAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                    <Label.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform Angle="-90"/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </Label.RenderTransform>
+                                </Label>
+                                <TextBox x:Name="QualityB" HorizontalAlignment="Left" Margin="9,44,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="46" Height="14" RenderTransformOrigin="0.5,0.5" TextChanged="QualityB_TextChanged">
+                                    <TextBox.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform Angle="-90"/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </TextBox.RenderTransform>
+                                </TextBox>
+                                <ScrollBar x:Name="scrollBar1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="2" RenderTransformOrigin="0.5,0.5" Margin="24,9,0,0">
+                                    <ScrollBar.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform Angle="90"/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </ScrollBar.RenderTransform>
+                                </ScrollBar>
                             </Grid>
                         </Border>
 
@@ -241,19 +255,21 @@
                 </GroupBox>
                 <GroupBox x:Name="ConversionProces" Header="Converting..." Margin="174,46,48,36" Foreground="#FF0E8636" d:IsHidden="True">
                     <Grid>
-                        <ProgressBar HorizontalAlignment="Center" Height="13" Margin="0,293,0,0" VerticalAlignment="Top" Width="540" BorderBrush="Black" Background="Black"/>
-                        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,10,422,60" Background="Black" BorderBrush="#FF0D7236" Foreground="#FF0F6C35"/>
+                        <ProgressBar x:Name="ProgressB" HorizontalAlignment="Center" Height="13" Margin="0,293,0,0" VerticalAlignment="Top" Width="540" BorderBrush="Black" Background="Black"/>
+                        <ListBox x:Name="ViewB" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,10,422,60" Background="Black" BorderBrush="#FF0D7236" Foreground="#FF0F6C35"/>
                         <Label Content="Conversion in progress" HorizontalAlignment="Left" Margin="280,10,0,0" VerticalAlignment="Top" Width="270" Foreground="#FF0C7336" BorderBrush="#FF0E7B25" HorizontalContentAlignment="Center" FontSize="20"/>
-                        <Label Content="Done: 0%" HorizontalAlignment="Left" Margin="143,267,0,0" VerticalAlignment="Top" Width="270" Foreground="#FF0C7336" BorderBrush="#FF0E7B25" HorizontalContentAlignment="Center"/>
+                        <Label x:Name="DonePercent" Content="Done: 0%" HorizontalAlignment="Left" Margin="143,267,0,0" VerticalAlignment="Top" Width="270" Foreground="#FF0C7336" BorderBrush="#FF0E7B25" HorizontalContentAlignment="Center"/>
                         <Label x:Name="TimeElapsed" Content="Time elapsed:&#xA;          0" HorizontalAlignment="Left" Margin="280,79,0,0" VerticalAlignment="Top" Width="270" Foreground="#FF0C7336" BorderBrush="#FF0E7B25" HorizontalContentAlignment="Center"/>
-                        <Button Content="Cancel" HorizontalAlignment="Left" Margin="364,209,0,0" VerticalAlignment="Top" Width="102" Height="40" Background="Black" BorderBrush="#FF0E642B" Foreground="#FF164E29">
+                        <Button x:Name="Cancel" Content="Cancel" HorizontalAlignment="Left" Margin="364,209,0,0" VerticalAlignment="Top" Width="102" Height="40" Background="Black" BorderBrush="#FF0E642B" Foreground="#FF164E29" Click="Cancel_Click">
                             <Button.Resources>
                                 <Style TargetType="{x:Type Border}">
                                     <Setter Property="CornerRadius" Value="10"/>
                                 </Style>
                             </Button.Resources>
                         </Button>
-                        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Margin="150,10,282,60" Background="Black" BorderBrush="#FF0D7236" Foreground="#FF0F6C35"/>
+                        <ListBox x:Name="ViewB2" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="150,10,282,60" Background="Black" BorderBrush="#FF0D7236" Foreground="#FF0F6C35"/>
+                        <Label x:Name="Left" Content="Left:&#xA;  0" HorizontalAlignment="Left" Margin="306,0,0,0" VerticalAlignment="Center" Width="94" Foreground="#FF0C7336" BorderBrush="#FF0E7B25" HorizontalContentAlignment="Center"/>
+                        <Label x:Name="Done" Content="Done:&#xA;    0" HorizontalAlignment="Left" Margin="435,0,0,0" VerticalAlignment="Center" Width="94" Foreground="#FF0C7336" BorderBrush="#FF0E7B25" HorizontalContentAlignment="Center"/>
                     </Grid>
                 </GroupBox>
 

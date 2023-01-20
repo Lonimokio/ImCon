@@ -20,7 +20,6 @@ using WebPWrapper;
 using ImageProcessor.Plugins.WebP.Imaging.Formats;
 using ImageProcessor.Processors;
 using ImageProcessor;
-using static System.Resources.ResXFileRef;
 using System.ComponentModel;
 using System.Diagnostics.Metrics;
 using System.Diagnostics;
@@ -41,16 +40,31 @@ namespace ImageConverter
         public Main()
         {
             InitializeComponent();
+            #region Menu buttons
             AboutB.Click += MenuClick;
             DBConversionB.Click += MenuClick;
             FConversionB.Click += MenuClick;
             SettingsB.Click += MenuClick;
+            #endregion
 
+            #region Background worker stuff
             backgroundWorker1.DoWork += backgroundWorker1_DoWork;
             backgroundWorker1.RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
             backgroundWorker1.ProgressChanged += backgroundWorker1_ProgressChanged;
+            backgroundWorker1.WorkerReportsProgress = true;
+            #endregion
+
+            #region Timer
             timer1.Tick += new EventHandler(timer1_Tick);
             timer1.Interval = new TimeSpan(0, 0, 1);
+            #endregion
+
+            #region Numeric up and down code
+            scrollBar1.ValueChanged += new RoutedPropertyChangedEventHandler<double>(scrollBar1_ValueChanged);
+            scrollBar1.Minimum = 0;
+            scrollBar1.Maximum = 100;
+            scrollBar1.SmallChange = 1;
+            #endregion
         }
 
         #region Variables here
@@ -74,11 +88,10 @@ namespace ImageConverter
         string pathString1;
         string filename1 = "";
         string sourcePath1;
+        string path;
+        string TableNameS;
         int lengthT;
         int Timer;
-        int minvalue = 0;
-        int maxvalue = 100;
-        int startvalue = 0;
         private int Quality;
         private int count;
         private int Iteration = 0;
@@ -91,6 +104,9 @@ namespace ImageConverter
         public List<string> Files = new List<string>();
         public List<string> FileN = new List<string>();
         public List<string> FileK = new List<string>();
+        bool SmallImagesBool= false;
+        bool DeletionBool = false;
+        bool MoveBool = false;
         #endregion
 
         #region Components in here
@@ -111,7 +127,7 @@ namespace ImageConverter
 
             {
 
-                CmdString = "SELECT * FROM " + TableName.Text;
+                CmdString = "SELECT * FROM " + TableNameS;
 
                 OdbcCommand cmd = new OdbcCommand(CmdString, con);
 
@@ -170,7 +186,7 @@ namespace ImageConverter
         public void DProblem(Exception ex)
         {
             Debug.WriteLine("<<< catch : " + ex.ToString());
-            using StreamWriter sw = File.AppendText(PathB.Text + @"Kuvat\Failed.Txt");
+            using StreamWriter sw = File.AppendText(path + @"Kuvat\Failed.Txt");
             sw.WriteLine("Error in Sql syntax in " + filename + " this should be manually fixed. Path to it should be: " + sourcePath + " Error is: " + ex);
             sw.Close();
         }
@@ -202,15 +218,17 @@ namespace ImageConverter
                     cnn = new OdbcConnection(connectionstring);
                     cnn.Open();
                     //Reading database and inserting values into listboxes
-                    Odbc = "Select Tiedosto, TuoteNro, kuvateksti from " + TableName.Text + " ORDER BY TuoteNro";
+                    Odbc = "Select Tiedosto, TuoteNro, kuvateksti from " + TableNameS + " ORDER BY TuoteNro";
                     command = new OdbcCommand(Odbc, cnn);
                     dataReader = command.ExecuteReader();
                     while (dataReader.Read())
                     {
                         output = dataReader.GetValue(0).ToString();
                         Files.Add(output);
+                        ViewB.Items.Add(output);
                         output = dataReader.GetValue(1).ToString();
                         FileN.Add(output);
+                        ViewB2.Items.Add(output);
                         output = dataReader.GetValue(2).ToString();
                         FileK.Add(output);
                     }
@@ -221,21 +239,22 @@ namespace ImageConverter
                 catch
                 {
                     //catching error with above procces
-                    System.Windows.Forms.MessageBox.Show("Invalid database or table name!", "Invalid input");
+                    System.Windows.MessageBox.Show("Invalid database or table name!", "Invalid input");
                 }
 
             }
             else
             {
                 //If input is empty
-                _ = System.Windows.Forms.MessageBox.Show("Invalid input!", "Invalid input!");
+                _ = System.Windows.MessageBox.Show("Invalid input!", "Invalid input!");
             }
         }
         #region BackGroundworker do stuff
+        //Bacground worker works
         private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            backgroundWorker1.WorkerReportsProgress = true;
-            BackgroundWorker worker = sender as BackgroundWorker;
+            //Initializing backgroundworker
+            BackgroundWorker worker = backgroundWorker1;
 
             //Looping trough to procces images
             for (int i = 1; i <= count; i++)
@@ -258,7 +277,9 @@ namespace ImageConverter
                     //Changing path in a way to prevent fails and prevent sql injection. Double '
                     Files[i].Replace("'", "''");
 
-                    if (SmallImages.IsChecked == true)
+                    //checking if small images are true
+                    #region Small images making procces
+                    if (SmallImagesBool == true)
                     {
                         GetFileN(i);
                         length = Files[i].Length - filename.Length;
@@ -291,7 +312,7 @@ namespace ImageConverter
                         destinationFile = "";
                         filename = "";
                     }
-
+                    #endregion
                     //Checking if file already in webp
                     Checker = Files[i][^4..];
                     if (Checker != type)
@@ -322,9 +343,11 @@ namespace ImageConverter
                             {
 
                             }
+                            //If deletion is enabled delete
+                            #region Deletion
                             try
                             {
-                                if (Deletion.IsEnabled)
+                                if (DeletionBool == true)
                                 {
                                     File.Delete(Files[i]);
                                 }
@@ -333,6 +356,7 @@ namespace ImageConverter
                             {
 
                             }
+                            #endregion
                         }
                     }
                     else
@@ -340,7 +364,7 @@ namespace ImageConverter
                         Converted = Files[i];
                     }
                     //Creating folders and moving images
-                    string folderName = PathB.Text + "Kuvat";
+                    string folderName = path + "Kuvat";
                     string pathString = System.IO.Path.Combine(folderName, "Tuote-numero-" + FileN[i]);
                     _ = System.IO.Directory.CreateDirectory(pathString);
 
@@ -367,12 +391,13 @@ namespace ImageConverter
                     {
 
                     }
-
-                    if (SmallImages.IsChecked == true)
+                    //If small images are enabled
+                    #region Database updates for small images
+                    if (SmallImagesBool == true)
                     {
                         //Inserting small images to database
                         OdbcDataAdapter adapter = new();
-                        string odbc = "INSERT INTO " + TableName.Text + " (TuoteNro, Tiedosto, Kuvateksti, Verkkokaupassa) VALUES('" + FileN[i] + "', '" + pathString + @"\" + filenameS + "', PikkuKuva, 0); ";
+                        string odbc = "INSERT INTO " + TableNameS + " (TuoteNro, Tiedosto, Kuvateksti, Verkkokaupassa) VALUES('" + FileN[i] + "', '" + pathString + @"\" + filenameS + "', PikkuKuva, 0); ";
                         command = new OdbcCommand(odbc, cnn);
                         adapter.UpdateCommand = new OdbcCommand(odbc, cnn);
                         try
@@ -384,9 +409,10 @@ namespace ImageConverter
                             Debug.WriteLine("<<< catch : " + ex.ToString());
                         }
                     }
+                    #endregion
                     //Updating database
                     adapter = new();
-                    odbc = "UPDATE " + TableName.Text + " SET Tiedosto = '" + pathString + @"\" + filename + "' Where Tiedosto = " + "'" + Files[i] + "'";
+                    odbc = "UPDATE " + TableNameS + " SET Tiedosto = '" + pathString + @"\" + filename + "' Where Tiedosto = " + "'" + Files[i] + "'";
                     command = new OdbcCommand(odbc, cnn);
                     adapter.UpdateCommand = new OdbcCommand(odbc, cnn);
                     try
@@ -415,70 +441,69 @@ namespace ImageConverter
         }
         private void backgroundWorker1_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
-            //if (InputB.Items.Count > counter)
-            //{
-            //    InputB.SelectedIndex = counter;
-            //    InputB2.SelectedIndex = counter;
-            //}
-            ////Making progress indicators
-            //Left1 = count - counter;
-            //Done.Text = counter.ToString();
-            //Left.Text = Left1.ToString();
+            if (ViewB.Items.Count > counter)
+            {
+                ViewB.SelectedIndex = counter;
+                ViewB2.SelectedIndex = counter;
+            }
+            //Making progress indicators
+            Left1 = count - counter;
+            Done.Content = counter.ToString();
+            Left.Content = Left1.ToString();
 
-            ////Progress bar
-            //ProgressB.Minimum = 0;
-            //ProgressB.Maximum = count + 1;
-            //if (ProgressB.Maximum > counter)
-            //{
-            //    ProgressB.Value = counter;
-            //}
-            ////Making log file to record everything done
-            //using (StreamWriter sw = File.AppendText(PathB.Text + @"Kuvat\Log.Txt"))
-            //{
-            //    if (Iteration == 0)
-            //    {
-            //        sw.WriteLine(DateTime.Now.ToString("ddd, dd MMM yyy HH':'mm':'ss 'GMT'"));
-            //        sw.WriteLine("User who made the change: " + System.Security.Principal.WindowsIdentity.GetCurrent().Name);
-            //        sw.WriteLine("");
-            //        Iteration = 1;
-            //    }
-            //    sw.WriteLine("Moved " + filename + " from " + sourcePath + " to " + pathString);
-            //    sw.Close();
-            //}
+            //Percentage done
+            DonePercent.Content = (count / counter * 100).ToString();
+
+            //Progress bar
+            ProgressB.Minimum = 0;
+            ProgressB.Maximum = count + 1;
+            if (ProgressB.Maximum > counter)
+            {
+                ProgressB.Value = counter;
+            }
+            //Making log file to record everything done
+            using (StreamWriter sw = File.AppendText(path + @"Kuvat\Log.Txt"))
+            {
+                if (Iteration == 0)
+                {
+                    sw.WriteLine(DateTime.Now.ToString("ddd, dd MMM yyy HH':'mm':'ss 'GMT'"));
+                    sw.WriteLine("User who made the change: " + System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+                    sw.WriteLine("");
+                    Iteration = 1;
+                }
+                sw.WriteLine("Moved " + filename + " from " + sourcePath + " to " + pathString);
+                sw.Close();
+            }
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            //counter++;
-            //Done.Text = counter.ToString();
-            //timer1.Stop();
-            //if (e.Error != null)
-            //{
-            //    System.Windows.Forms.MessageBox.Show(e.Error.Message);
-            //}
-            //else if (e.Cancelled)
-            //{
-            //    _ = System.Windows.Forms.MessageBox.Show("Cancelled. still moved and converted " + counter + " images");
-            //}
-            //else
-            //{
-            //    _ = System.Windows.Forms.MessageBox.Show("Done. Moved and converted " + counter + " images");
-            //}
-            //ProgressB.Value = 0;
-            //Left1 = 0;
-            //counter = 0;
-            //Iteration = 0;
-            //cnn.Close();
-            //timer1.Stop();
+            counter++;
+            Done.Content = counter.ToString();
+            timer1.Stop();
+            if (e.Error != null)
+            {
+                System.Windows.MessageBox.Show(e.Error.Message);
+            }
+            else if (e.Cancelled)
+            {
+                _ = System.Windows.MessageBox.Show("Cancelled. still moved and converted " + counter + " images");
+            }
+            else
+            {
+                _ = System.Windows.MessageBox.Show("Done. Moved and converted " + counter + " images");
+            }
+            ProgressB.Value = 0;
+            Left1 = 0;
+            counter = 0;
+            Iteration = 0;
+            cnn.Close();
 
-            ////Enabling some controls
-            //convert.Enabled = true;
-            //TypeB.Enabled = true;
-            //QualityB.Enabled = true;
-            //PathB.Enabled = true;
-            //Connect.Enabled = true;
-            ////Disabling Cancel
-            //Cancel.Enabled = false;
+            //Making maingrid visible
+            DBMainGrid.Visibility = System.Windows.Visibility.Hidden;
+            //Disabling Cancel and hiding conversion
+            ConversionProces.Visibility = Visibility.Hidden;
+            Cancel.IsEnabled = false;
         }
         #endregion
 
@@ -547,8 +572,7 @@ namespace ImageConverter
         #region Move checked and unchecked
         private void MoveI_Checked(object sender, RoutedEventArgs e)
         {
-            SaveP.Visibility = System.Windows.Visibility.Visible;
-            PathB.Visibility = System.Windows.Visibility.Visible;
+            .Visibility = System.Windows.Visibility.Visible;
         }
 
         private void MoveI_Unchecked(object sender, RoutedEventArgs e)
@@ -564,7 +588,6 @@ namespace ImageConverter
             //Checking if the list Files has something inside
             if (Files.Count > 0)
             {
-                System.Windows.MessageBox.Show("Test");
                 //Getting amount of items.
                 count = Files.Count - 1;
                 //Starting progress
@@ -581,74 +604,101 @@ namespace ImageConverter
             TimeElapsed.Content = "Time elapsed:&#xA;           " + Timer;
         }
 
+        #region Option Checkboxes
         private void Deletion_Checked(object sender, RoutedEventArgs e)
         {
-
+            DeletionBool = true;
         }
 
         private void Deletion_Unchecked(object sender, RoutedEventArgs e)
         {
-
+            DeletionBool = false;
         }
 
         private void SmallImages_Checked(object sender, RoutedEventArgs e)
         {
-
+            SmallImagesBool = true;
         }
 
         private void SmallImages_Unchecked(object sender, RoutedEventArgs e)
         {
+            SmallImagesBool = false;
+        }
+        #endregion
 
+        void scrollBar1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            QualityB.Text = scrollBar1.Value.ToString();
         }
 
-        private void NUD
-        private void NUDTextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void QualityB_TextChanged(object sender, TextChangedEventArgs e)
         {
-
-            if (e.Key == Key.Up)
+            try
             {
-                NUDButtonUP.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Button.ClickEvent));
-                typeof(System.Windows.Controls.Button).GetMethod("set_IsPressed", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(NUDButtonUP, new object[] { true });
+                if (QualityB.Text != "")
+                {
+                    if (int.Parse(QualityB.Text) > 100)
+                    {
+                        QualityB.Text = "100";
+                    }
+                    else if (int.Parse(QualityB.Text) < 0)
+                    {
+                        QualityB.Text = "0";
+                    }
+                }
+                else
+                {
+
+                }
             }
-
-
-            if (e.Key == Key.Down)
+            catch
             {
-                NUDButtonDown.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Button.ClickEvent));
-                typeof(System.Windows.Controls.Button).GetMethod("set_IsPressed", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(NUDButtonDown, new object[] { true });
+                QualityB.Text = scrollBar1.Value.ToString();
             }
+            Quality = int.Parse(QualityB.Text);
         }
 
-        private void NUDTextBox_PreviewKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        //Database Cancel Button code
+        private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            if (e.Key == Key.Up)
-                typeof(System.Windows.Controls.Button).GetMethod("set_IsPressed", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(NUDButtonUP, new object[] { false });
+            // Cancel the asynchronous operation.
+            this.backgroundWorker1.CancelAsync();
 
-            if (e.Key == Key.Down)
-                typeof(System.Windows.Controls.Button).GetMethod("set_IsPressed", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(NUDButtonDown, new object[] { false });
+            // Disable the Cancel button.
+            Cancel.IsEnabled = false;
         }
 
-        private void NUDTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        #region Setting values in variables
+        //Updating rigth path
+        private void PathB_TextChanged(object sender, TextChangedEventArgs e)
         {
-            int number = 0;
-            if (QualityB.Text != "")
-                if (!int.TryParse(QualityB.Text, out number)) QualityB.Text = startvalue.ToString();
-            if (number > maxvalue) QualityB.Text = maxvalue.ToString();
-            if (number < minvalue) QualityB.Text = minvalue.ToString();
-            QualityB.SelectionStart = QualityB.Text.Length;
-
+            path = PathB.Text;
         }
 
+        private void TableName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TableNameS = TableName.Text;
+        }
+        #endregion
 
+        //Making some changes when the window is loaded
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            #region Setting values in variables
+            path = PathB.Text;
+            TableNameS = TableName.Text;
+            #endregion
+
+            #region Display settings
             //Making windows to be displayed correctly
             this.SizeToContent = SizeToContent.WidthAndHeight;
             DBConvertion.Visibility = System.Windows.Visibility.Hidden;
             FConversion.Visibility = System.Windows.Visibility.Hidden;
             Settings.Visibility = System.Windows.Visibility.Hidden;
             ConversionProces.Visibility = Visibility.Hidden;
+            #endregion
 
+            #region Default database
             //Getting default database
             try
             {
@@ -672,6 +722,7 @@ namespace ImageConverter
             {
                 Console.WriteLine(ex.Message);
             }
+            #endregion
         }
     }
 }
