@@ -186,7 +186,7 @@ namespace ImageConverter
         public void DProblem(Exception ex)
         {
             Debug.WriteLine("<<< catch : " + ex.ToString());
-            using StreamWriter sw = File.AppendText(path + @"Kuvat\Failed.Txt");
+            using StreamWriter sw = File.AppendText(path + FolderName.Text+@"\Failed.Txt");
             sw.WriteLine("Error in Sql syntax in " + filename + " this should be manually fixed. Path to it should be: " + sourcePath + " Error is: " + ex);
             sw.Close();
         }
@@ -364,8 +364,8 @@ namespace ImageConverter
                         Converted = Files[i];
                     }
                     //Creating folders and moving images
-                    string folderName = path + "Kuvat";
-                    string pathString = System.IO.Path.Combine(folderName, "Tuote-numero-" + FileN[i]);
+                    string folderName = path + FolderName.Text;
+                    string pathString = System.IO.Path.Combine(folderName, FileNames.Text + FileN[i]);
                     _ = System.IO.Directory.CreateDirectory(pathString);
 
                     separator = Converted;
@@ -462,7 +462,7 @@ namespace ImageConverter
                 ProgressB.Value = counter;
             }
             //Making log file to record everything done
-            using (StreamWriter sw = File.AppendText(path + @"Kuvat\Log.Txt"))
+            using (StreamWriter sw = File.AppendText(path + FolderName.Text+@"\Log.Txt"))
             {
                 if (Iteration == 0)
                 {
@@ -572,13 +572,12 @@ namespace ImageConverter
         #region Move checked and unchecked
         private void MoveI_Checked(object sender, RoutedEventArgs e)
         {
-            .Visibility = System.Windows.Visibility.Visible;
+            MoveImagesGrid.Visibility = System.Windows.Visibility.Visible;
         }
 
         private void MoveI_Unchecked(object sender, RoutedEventArgs e)
         {
-            SaveP.Visibility = System.Windows.Visibility.Hidden;
-            PathB.Visibility = System.Windows.Visibility.Hidden;
+            MoveImagesGrid.Visibility = System.Windows.Visibility.Hidden;
         }
         #endregion
 

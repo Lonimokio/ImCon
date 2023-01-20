@@ -96,7 +96,7 @@
                         </Button>
                         <Border x:Name="SettingsDBB" BorderBrush="#FF191818" BorderThickness="1" CornerRadius="20" Margin="26,220,507,17" Background="#FF1B1A1A">
                             <Grid Margin="0,-9,-7,9">
-                                <Grid>
+                                <Grid x:Name="MoveImagesGrid">
                                 <Label x:Name="SaveP" Content="Save paths" HorizontalAlignment="Left" Margin="17,10,0,0" VerticalAlignment="Top" Foreground="#FF136930" Height="27" Width="98" HorizontalContentAlignment="Center"/>
                                 <TextBox x:Name="PathB" HorizontalAlignment="Left" Margin="17,55,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Text="C:\winskj\" HorizontalContentAlignment="Center" TextChanged="PathB_TextChanged" ToolTip="Path name where images will be put into"/>
                                 <TextBox x:Name="FolderName" HorizontalAlignment="Left" Margin="17,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Text="Kuvat" HorizontalContentAlignment="Center" TextChanged="PathB_TextChanged" ToolTip="Folder name where images will be saved"/>
