@@ -1,32 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ImageProcessor;
+using ImageProcessor.Plugins.WebP.Imaging.Formats;
+using System.ComponentModel;
 using System.Data;
 using System.Data.Odbc;
-using System.Linq;
-using System.Printing;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Xml.Linq;
-using System.Configuration;
-using WebPWrapper;
-using ImageProcessor.Plugins.WebP.Imaging.Formats;
-using ImageProcessor.Processors;
-using ImageProcessor;
-using System.ComponentModel;
-using System.Diagnostics.Metrics;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
-using System.Security.Policy;
-using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 namespace ImageConverter
@@ -40,6 +21,7 @@ namespace ImageConverter
         public Main()
         {
             InitializeComponent();
+            #region Database convertion stuff
             #region Menu buttons
             AboutB.Click += MenuClick;
             DBConversionB.Click += MenuClick;
@@ -52,6 +34,7 @@ namespace ImageConverter
             backgroundWorker1.RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
             backgroundWorker1.ProgressChanged += backgroundWorker1_ProgressChanged;
             backgroundWorker1.WorkerReportsProgress = true;
+            backgroundWorker1.WorkerSupportsCancellation = true;
             #endregion
 
             #region Timer
@@ -65,11 +48,11 @@ namespace ImageConverter
             scrollBar1.Maximum = 100;
             scrollBar1.SmallChange = 1;
             #endregion
+            #endregion
         }
 
         #region Variables here
-        int length;
-
+        #region Strings
         private string type = "webp";
         private string filename = "";
         string filenameS;
@@ -85,33 +68,48 @@ namespace ImageConverter
         public string pathString;
         string connectionstring;
         string Odbc, output;
-        string pathString1;
-        string filename1 = "";
-        string sourcePath1;
         string path;
         string TableNameS;
+        string FolderNameS;
+        string FileNamesS;
+        string destFile;
+        #endregion
+        #region Ints
+        int length;
         int lengthT;
-        int Timer;
-        private int Quality;
-        private int count;
+        int Seconds;
+        int Minutes;
+        int Hours;
+        private int Quality = 60;
         private int Iteration = 0;
-        private int counter = 0;
         private int Left1;
+        #endregion
+        #region Float
+        private float counter = 0;
+        private float count;
+        #endregion
+        #region Odbc 
         public OdbcCommand command;
         public OdbcDataReader dataReader;
         public OdbcConnection cnn;
         public OdbcDataAdapter adapter;
-        public List<string> Files = new List<string>();
-        public List<string> FileN = new List<string>();
-        public List<string> FileK = new List<string>();
-        bool SmallImagesBool= false;
+        #endregion
+        #region Lists
+        public List<string> Files = new();
+        public List<string> FileN = new();
+        public List<string> FileK = new();
+        #endregion
+        #region Bool
+        bool SmallImagesBool = false;
         bool DeletionBool = false;
         bool MoveBool = false;
+        bool UpdateDBBool = true;
+        #endregion
         #endregion
 
         #region Components in here
-        private readonly BackgroundWorker backgroundWorker1 = new BackgroundWorker();
-        DispatcherTimer timer1 = new DispatcherTimer();
+        private readonly BackgroundWorker backgroundWorker1 = new();
+        DispatcherTimer timer1 = new();
         #endregion
 
         #region Methods here
@@ -123,17 +121,17 @@ namespace ImageConverter
 
             string CmdString = string.Empty;
 
-            using (OdbcConnection con = new OdbcConnection(ConString))
+            using (OdbcConnection con = new(ConString))
 
             {
 
                 CmdString = "SELECT * FROM " + TableNameS;
 
-                OdbcCommand cmd = new OdbcCommand(CmdString, con);
+                OdbcCommand cmd = new(CmdString, con);
 
-                OdbcDataAdapter sda = new OdbcDataAdapter(cmd);
+                OdbcDataAdapter sda = new(cmd);
 
-                DataTable dt = new DataTable(DBName.Text);
+                DataTable dt = new(DBName.Text);
 
                 sda.Fill(dt);
 
@@ -181,12 +179,13 @@ namespace ImageConverter
             filenameT = "";
 
             filename = TempS;
+            TempS = "";
         }
 
         public void DProblem(Exception ex)
         {
             Debug.WriteLine("<<< catch : " + ex.ToString());
-            using StreamWriter sw = File.AppendText(path + FolderName.Text+@"\Failed.Txt");
+            using StreamWriter sw = File.AppendText(path + FolderNameS + @"\Failed.Txt");
             sw.WriteLine("Error in Sql syntax in " + filename + " this should be manually fixed. Path to it should be: " + sourcePath + " Error is: " + ex);
             sw.Close();
         }
@@ -225,10 +224,8 @@ namespace ImageConverter
                     {
                         output = dataReader.GetValue(0).ToString();
                         Files.Add(output);
-                        ViewB.Items.Add(output);
                         output = dataReader.GetValue(1).ToString();
                         FileN.Add(output);
-                        ViewB2.Items.Add(output);
                         output = dataReader.GetValue(2).ToString();
                         FileK.Add(output);
                     }
@@ -249,34 +246,40 @@ namespace ImageConverter
                 _ = System.Windows.MessageBox.Show("Invalid input!", "Invalid input!");
             }
         }
+
         #region BackGroundworker do stuff
-        //Bacground worker works
+        //Background worker works
         private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
+            #region Initialization
             //Initializing backgroundworker
             BackgroundWorker worker = backgroundWorker1;
+            #endregion
 
             //Looping trough to procces images
-            for (int i = 1; i <= count; i++)
-            {
+            for (int i = 0; i <= count; i++)
+
+                #region Checking if cancel has been clicked
                 if (worker.CancellationPending == true)
                 {
                     e.Cancel = true;
                     break;
                 }
+                #endregion
                 else
                 {
-                    if (FileK.Count == i)
+                    #region Checking if image is small image
+                    if (FileK.Count <= i)
                     {
                         if (FileK[i] == "PikkuKuva")
                         {
                             continue;
                         }
                     }
+                    #endregion
 
                     //Changing path in a way to prevent fails and prevent sql injection. Double '
-                    Files[i].Replace("'", "''");
-
+                    Files[i] = Files[i].Replace("'", "''");
                     //checking if small images are true
                     #region Small images making procces
                     if (SmallImagesBool == true)
@@ -313,6 +316,8 @@ namespace ImageConverter
                         filename = "";
                     }
                     #endregion
+
+                    #region File convertion
                     //Checking if file already in webp
                     Checker = Files[i][^4..];
                     if (Checker != type)
@@ -326,18 +331,21 @@ namespace ImageConverter
                         }
                         Converted = separator + "." + type;
                         string oldImagePath = Files[i];
-                        string webpFilePath = Converted;
+                        string NewFile = Converted;
 
                         if (File.Exists(oldImagePath))
                         {
                             try
                             {
-                                using FileStream webPFileStream = new(webpFilePath, FileMode.Create);
+                                using FileStream webPFileStream = new(NewFile, FileMode.Create);
                                 using ImageFactory imageFactory = new(preserveExifData: false);
                                 _ = imageFactory.Load(oldImagePath)
                                          .Format(new WebPFormat())
                                          .Quality(Quality)
                                          .Save(webPFileStream);
+                                //Bitmap bmp = new Bitmap(oldImagePath);
+                                //using (WebP webp = new WebP())
+                                //    webp.Save(bmp, NewFile, 80);
                             }
                             catch (Exception)
                             {
@@ -359,29 +367,33 @@ namespace ImageConverter
                             #endregion
                         }
                     }
+
+
                     else
                     {
                         Converted = Files[i];
                     }
+                    #endregion
+
+                    #region File moving
                     //Creating folders and moving images
-                    string folderName = path + FolderName.Text;
-                    string pathString = System.IO.Path.Combine(folderName, FileNames.Text + FileN[i]);
-                    _ = System.IO.Directory.CreateDirectory(pathString);
+                    string folderName = path + FolderNameS;
+                    pathString = System.IO.Path.Combine(folderName, FileNamesS + FileN[i]);
+                    _ = Directory.CreateDirectory(pathString);
 
                     separator = Converted;
 
                     length = separator.Length;
                     length--;
+                    #endregion
 
                     //getting filename by running trough until hitting \
                     GetFileN(i);
 
-                    TempS = "";
-
                     //Updating filepaths
                     sourcePath = Converted;
                     sourceFile = System.IO.Path.Combine(sourcePath);
-                    string destFile = System.IO.Path.Combine(pathString, filename);
+                    destFile = System.IO.Path.Combine(pathString, filename);
                     //Catching possible errors
                     try
                     {
@@ -410,49 +422,57 @@ namespace ImageConverter
                         }
                     }
                     #endregion
-                    //Updating database
-                    adapter = new();
-                    odbc = "UPDATE " + TableNameS + " SET Tiedosto = '" + pathString + @"\" + filename + "' Where Tiedosto = " + "'" + Files[i] + "'";
-                    command = new OdbcCommand(odbc, cnn);
-                    adapter.UpdateCommand = new OdbcCommand(odbc, cnn);
-                    try
+
+                    #region Updating database locations
+                    if (UpdateDBBool == true)
                     {
-                        _ = adapter.UpdateCommand.ExecuteNonQuery();
-                    }
-                    catch (Exception ex)
-                    {
+
+
+                        //Updating database
+                        adapter = new();
+                        odbc = "UPDATE " + TableNameS + " SET Tiedosto = '" + pathString + @"\" + filename + "' Where Tiedosto = " + "'" + Files[i] + "'";
+                        command = new OdbcCommand(odbc, cnn);
+                        adapter.UpdateCommand = new OdbcCommand(odbc, cnn);
+                        cnn.Open();
                         try
                         {
-                            DProblem(ex);
+                            _ = adapter.UpdateCommand.ExecuteNonQuery();
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            Thread.Sleep(1);
-                            DProblem(ex);
+                            try
+                            {
+                                DProblem(ex);
+                            }
+                            catch
+                            {
+                                Thread.Sleep(1);
+                                DProblem(ex);
+                            }
                         }
+                        command.Dispose();
+                        cnn.Close();
                     }
-                    command.Dispose();
+                    #endregion
 
-                    filename = "";
                     counter++;
                     worker.ReportProgress(1 * 1);
                 }
-            }
         }
         private void backgroundWorker1_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
-            if (ViewB.Items.Count > counter)
-            {
-                ViewB.SelectedIndex = counter;
-                ViewB2.SelectedIndex = counter;
-            }
+            #region Progress indicators
+            //image
+            ConversionPreview.Source = new BitmapImage(new Uri(Files[0], UriKind.Relative));
+
             //Making progress indicators
-            Left1 = count - counter;
-            Done.Content = counter.ToString();
-            Left.Content = Left1.ToString();
+            Left1 = (int)(count - counter);
+            Done.Text = "Done: " + counter.ToString();
+            Left.Text = "Left: " + Left1.ToString();
 
             //Percentage done
-            DonePercent.Content = (count / counter * 100).ToString();
+            float PercentTemp = (counter / count * 100);
+            DonePercent.Content = Math.Round((Decimal)PercentTemp, 1, MidpointRounding.AwayFromZero).ToString() + "% Done";
 
             //Progress bar
             ProgressB.Minimum = 0;
@@ -461,8 +481,10 @@ namespace ImageConverter
             {
                 ProgressB.Value = counter;
             }
-            //Making log file to record everything done
-            using (StreamWriter sw = File.AppendText(path + FolderName.Text+@"\Log.Txt"))
+            #endregion
+
+            #region Making log file to record everything done
+            using (StreamWriter sw = File.AppendText(path + FolderNameS + @"\Log.Txt"))
             {
                 if (Iteration == 0)
                 {
@@ -471,28 +493,32 @@ namespace ImageConverter
                     sw.WriteLine("");
                     Iteration = 1;
                 }
-                sw.WriteLine("Moved " + filename + " from " + sourcePath + " to " + pathString);
+                sw.WriteLine("MOVED     " + filename + "    FROM    " + sourcePath + "     TO      " + destFile);
                 sw.Close();
             }
+            #endregion
         }
-
         private void backgroundWorker1_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             counter++;
-            Done.Content = counter.ToString();
+            Done.Text = counter.ToString();
             timer1.Stop();
+            //handling error in progress
             if (e.Error != null)
             {
                 System.Windows.MessageBox.Show(e.Error.Message);
             }
+            //Handling cancelation
             else if (e.Cancelled)
             {
                 _ = System.Windows.MessageBox.Show("Cancelled. still moved and converted " + counter + " images");
             }
+            //Handling completion
             else
             {
                 _ = System.Windows.MessageBox.Show("Done. Moved and converted " + counter + " images");
             }
+            #region Resetting some values and making rigth control visible/hidden
             ProgressB.Value = 0;
             Left1 = 0;
             counter = 0;
@@ -500,10 +526,19 @@ namespace ImageConverter
             cnn.Close();
 
             //Making maingrid visible
-            DBMainGrid.Visibility = System.Windows.Visibility.Hidden;
+            DBMainGrid.Visibility = System.Windows.Visibility.Visible;
             //Disabling Cancel and hiding conversion
             ConversionProces.Visibility = Visibility.Hidden;
             Cancel.IsEnabled = false;
+
+            #region Enabling buttons
+            AboutB.IsEnabled = true;
+            DBConversionB.IsEnabled = true;
+            FConversionB.IsEnabled = true;
+            SettingsB.IsEnabled = true;
+            #endregion
+
+            #endregion
         }
         #endregion
 
@@ -590,6 +625,15 @@ namespace ImageConverter
                 //Getting amount of items.
                 count = Files.Count - 1;
                 //Starting progress
+                #region Disabling buttons
+                AboutB.IsEnabled = false;
+                DBConversionB.IsEnabled = false;
+                FConversionB.IsEnabled = false;
+                SettingsB.IsEnabled = false;
+                #endregion
+                #region Image processing
+                ConversionPreview.Source = new BitmapImage(new Uri(Files[0], UriKind.Relative));
+                #endregion
                 DBMainGrid.Visibility = System.Windows.Visibility.Hidden;
                 ConversionProces.Visibility = System.Windows.Visibility.Visible;
                 timer1.Start();
@@ -597,11 +641,50 @@ namespace ImageConverter
             }
         }
 
+        #region Bunch of value setting
+
+        #region Small things (Timer, option checkboxes, scrollbar, quality, cancel)
         private void timer1_Tick(object sender, EventArgs e)
         {
-            Timer++;
-            TimeElapsed.Content = "Time elapsed:&#xA;           " + Timer;
+            #region dot animation
+            //Making Dot animation
+            if (ConversionProces.Header.ToString() == "Converting...")
+            {
+                ConversionProces.Header = "Converting.";
+            }
+            else if (ConversionProces.Header.ToString() == "Converting.")
+            {
+                ConversionProces.Header = "Converting..";
+            }
+            else if (ConversionProces.Header.ToString() == "Converting..")
+            {
+                ConversionProces.Header = "Converting...";
+            }
+            #endregion
+            Seconds++;
+            #region Time logic
+            TimeElapsed.Text = "Time elapsed: " + Seconds + " S";
+            if (Minutes > 0)
+            {
+                TimeElapsed.Text = "Time elapsed: " + Minutes + " M " + Seconds + " S";
+            }
+            if (Hours > 0)
+            {
+                TimeElapsed.Text = "Time elapsed: " + Hours + " H " + Minutes + " M " + Seconds + " S";
+            }
+            if (Seconds == 60)
+            {
+                Seconds = 0;
+                Minutes++;
+            }
+            if (Minutes == 60)
+            {
+                Minutes = 0;
+                Hours++;
+            }
+            #endregion
         }
+
 
         #region Option Checkboxes
         private void Deletion_Checked(object sender, RoutedEventArgs e)
@@ -623,6 +706,16 @@ namespace ImageConverter
         {
             SmallImagesBool = false;
         }
+        private void UpdateDB_Checked(object sender, RoutedEventArgs e)
+        {
+            UpdateDBBool = true;
+        }
+
+        private void UpdateDB_Unchecked(object sender, RoutedEventArgs e)
+        {
+            UpdateDBBool = false;
+        }
+
         #endregion
 
         void scrollBar1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -654,7 +747,14 @@ namespace ImageConverter
             {
                 QualityB.Text = scrollBar1.Value.ToString();
             }
-            Quality = int.Parse(QualityB.Text);
+            try
+            {
+                Quality = int.Parse(QualityB.Text);
+            }
+            catch
+            {
+
+            }
         }
 
         //Database Cancel Button code
@@ -666,6 +766,7 @@ namespace ImageConverter
             // Disable the Cancel button.
             Cancel.IsEnabled = false;
         }
+        #endregion
 
         #region Setting values in variables
         //Updating rigth path
@@ -686,6 +787,8 @@ namespace ImageConverter
             #region Setting values in variables
             path = PathB.Text;
             TableNameS = TableName.Text;
+            FolderNameS = FolderName.Text;
+            FileNamesS = FileNames.Text;
             #endregion
 
             #region Display settings
@@ -723,5 +826,6 @@ namespace ImageConverter
             }
             #endregion
         }
+        #endregion
     }
 }
