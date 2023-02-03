@@ -63,6 +63,7 @@ namespace ImageConverter
         string TempS;
         private string Converted;
         string sourceFile;
+        string sourceFile1;
         string odbc;
         public string sourcePath;
         public string pathString;
@@ -73,8 +74,14 @@ namespace ImageConverter
         string FolderNameS;
         string FileNamesS;
         string destFile;
+        string destFile1;
+        string Updatable;
+        string NewFile;
+        string pathString1;
         #endregion
         #region Ints
+        int index;
+        int FileNotFoundCounter;
         int length;
         int lengthT;
         int Seconds;
@@ -85,7 +92,7 @@ namespace ImageConverter
         private int Left1;
         #endregion
         #region Float
-        private float counter = 0;
+        private float counter = -1;
         private float count;
         #endregion
         #region Odbc 
@@ -102,8 +109,9 @@ namespace ImageConverter
         #region Bool
         bool SmallImagesBool = false;
         bool DeletionBool = false;
-        bool MoveBool = false;
+        bool MoveBool = true;
         bool UpdateDBBool = true;
+        bool FileNotFound = false;
         #endregion
         #endregion
 
@@ -139,11 +147,11 @@ namespace ImageConverter
 
             }
         }
-        public void GetFileN(int i)
+        public void GetFileN(int i, string Conversion)
         {
             //getting filename by running trough until hitting \
-            separatorT = Files[i];
-            length = Files[i].Length;
+            separatorT = Conversion;
+            length = Conversion.Length;
             length--;
             lengthT = separatorT.Length;
             lengthT--;
@@ -181,13 +189,31 @@ namespace ImageConverter
             filename = TempS;
             TempS = "";
         }
-
         public void DProblem(Exception ex)
         {
             Debug.WriteLine("<<< catch : " + ex.ToString());
             using StreamWriter sw = File.AppendText(path + FolderNameS + @"\Failed.Txt");
             sw.WriteLine("Error in Sql syntax in " + filename + " this should be manually fixed. Path to it should be: " + sourcePath + " Error is: " + ex);
             sw.Close();
+        }
+        public void UpdateDBM(int i, string NewDatabaseName)
+        {
+            //Updating database
+            adapter = new();
+            odbc = "UPDATE " + TableNameS + " SET Tiedosto = '" + NewDatabaseName + "' Where Tiedosto = " + "'" + Files[i] + "'";
+            command = new OdbcCommand(odbc, cnn);
+            adapter.UpdateCommand = new OdbcCommand(odbc, cnn);
+            cnn.Open();
+            try
+            {
+                _ = adapter.UpdateCommand.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                DProblem(ex);
+            }
+            command.Dispose();
+            cnn.Close();
         }
         #endregion
 
@@ -258,7 +284,7 @@ namespace ImageConverter
 
             //Looping trough to procces images
             for (int i = 0; i <= count; i++)
-
+            {
                 #region Checking if cancel has been clicked
                 if (worker.CancellationPending == true)
                 {
@@ -284,14 +310,15 @@ namespace ImageConverter
                     #region Small images making procces
                     if (SmallImagesBool == true)
                     {
-                        GetFileN(i);
-                        length = Files[i].Length - filename.Length;
-
-
-                        TempS = Files[i].Substring(0, length) + "Pikkukuva" + filename;
-                        length = TempS.Length - 4;
-                        TempS = TempS.Substring(0, length) + "Jpeg";
-
+                        //Settup for small images
+                        TempS = Files[i];
+                        separator = TempS;
+                        index = separator.IndexOf(".");
+                        if (index >= 0)
+                        {
+                            TempS = separator[..index];
+                        }
+                        TempS = TempS+"PikkuKuva.Jpeg";
                         //Creating copy of image to use for small image.
                         string sourceFile = Files[i];
                         string destinationFile = TempS;
@@ -308,7 +335,7 @@ namespace ImageConverter
                         {
 
                         }
-
+                        pathString1 = TempS;
                         filenameS = filename;
                         TempS = "";
                         sourceFile = "";
@@ -318,21 +345,23 @@ namespace ImageConverter
                     #endregion
 
                     #region File convertion
-                    //Checking if file already in webp
-                    Checker = Files[i][^4..];
-                    if (Checker != type)
+                    //Checking file type
+                    separator = Files[i];
+                    index = separator.IndexOf(".");
+                    if (index >= 0)
                     {
-                        //File convertion
-                        separator = Files[i];
-                        int index = separator.IndexOf(".");
-                        if (index >= 0)
-                        {
-                            separator = separator[..index];
-                        }
-                        Converted = separator + "." + type;
-                        string oldImagePath = Files[i];
-                        string NewFile = Converted;
+                        Checker = separator[index..];
+                        separator = separator[..index];
+                    }
+                    Converted = separator + "." + type;
+                    string oldImagePath = Files[i];
+                    NewFile = Converted;
+                    //Checking if file already in webp
+                    if (Checker != "."+type)
+                    {
 
+
+                        //File convertion
                         if (File.Exists(oldImagePath))
                         {
                             try
@@ -343,9 +372,6 @@ namespace ImageConverter
                                          .Format(new WebPFormat())
                                          .Quality(Quality)
                                          .Save(webPFileStream);
-                                //Bitmap bmp = new Bitmap(oldImagePath);
-                                //using (WebP webp = new WebP())
-                                //    webp.Save(bmp, NewFile, 80);
                             }
                             catch (Exception)
                             {
@@ -366,6 +392,10 @@ namespace ImageConverter
                             }
                             #endregion
                         }
+                        else
+                        {
+                            FileNotFound = true;
+                        }
                     }
 
 
@@ -375,89 +405,100 @@ namespace ImageConverter
                     }
                     #endregion
 
-                    #region File moving
-                    //Creating folders and moving images
-                    string folderName = path + FolderNameS;
-                    pathString = System.IO.Path.Combine(folderName, FileNamesS + FileN[i]);
-                    _ = Directory.CreateDirectory(pathString);
-
-                    separator = Converted;
-
-                    length = separator.Length;
-                    length--;
-                    #endregion
-
-                    //getting filename by running trough until hitting \
-                    GetFileN(i);
-
-                    //Updating filepaths
-                    sourcePath = Converted;
-                    sourceFile = System.IO.Path.Combine(sourcePath);
-                    destFile = System.IO.Path.Combine(pathString, filename);
-                    //Catching possible errors
-                    try
+                    if (FileNotFound == true)
                     {
-                        System.IO.File.Move(sourceFile, destFile);
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-                    //If small images are enabled
-                    #region Database updates for small images
-                    if (SmallImagesBool == true)
-                    {
-                        //Inserting small images to database
-                        OdbcDataAdapter adapter = new();
-                        string odbc = "INSERT INTO " + TableNameS + " (TuoteNro, Tiedosto, Kuvateksti, Verkkokaupassa) VALUES('" + FileN[i] + "', '" + pathString + @"\" + filenameS + "', PikkuKuva, 0); ";
-                        command = new OdbcCommand(odbc, cnn);
-                        adapter.UpdateCommand = new OdbcCommand(odbc, cnn);
-                        try
+                        if (!File.Exists(Files[i]))
                         {
-                            _ = adapter.UpdateCommand.ExecuteNonQuery();
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine("<<< catch : " + ex.ToString());
+                            FileNotFoundCounter++;
                         }
                     }
-                    #endregion
+                    else
+                    {
 
+                        //File moving
+                        if (MoveBool == true)
+                        {
+                            #region Creating folders
+                            //Creating folders and moving images
+                            string folderName = path + FolderNameS;
+                            pathString = System.IO.Path.Combine(folderName, FileNamesS + FileN[i]);
+                            _ = Directory.CreateDirectory(pathString);
+
+                            separator = Converted;
+
+                            length = separator.Length;
+                            length--;
+                            #endregion
+
+                            //getting filename by running trough until hitting \
+                            GetFileN(i, Converted);
+
+                            #region File moving
+                            //Updating filepaths
+                            sourcePath = Converted;
+                            sourceFile = System.IO.Path.Combine(sourcePath);
+                            destFile = System.IO.Path.Combine(pathString, filename);
+                            GetFileN(i, pathString1);
+                            sourceFile1 = System.IO.Path.Combine(pathString1);
+                            destFile1 = System.IO.Path.Combine(pathString, filename);
+                            //Catching possible errors
+                            try
+                            {
+                                System.IO.File.Move(sourceFile, destFile);
+                                System.IO.File.Move(sourceFile1, destFile1);
+                            }
+                            catch (Exception)
+                            {
+
+                            }
+                            #endregion
+                        }
+                        //If small images are enabled
+                        #region Database updates for small images
+                        if (SmallImagesBool == true)
+                        {
+                            //Inserting small images to database
+                            OdbcDataAdapter adapter = new();
+                            string odbc = "INSERT INTO " + TableNameS + " (TuoteNro, Tiedosto, Kuvateksti, Verkkokaupassa) VALUES('" + FileN[i] + "', '" + pathString1 + @"\" + filenameS + "', PikkuKuva, 0); ";
+                            command = new OdbcCommand(odbc, cnn);
+                            adapter.UpdateCommand = new OdbcCommand(odbc, cnn);
+                            cnn.Open();
+                            try
+                            {
+                                _ = adapter.UpdateCommand.ExecuteNonQuery();
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine("<<< catch : " + ex.ToString());
+                            }
+                            cnn.Close();
+                        }
+                        #endregion
+                    }
                     #region Updating database locations
                     if (UpdateDBBool == true)
                     {
-
-
-                        //Updating database
-                        adapter = new();
-                        odbc = "UPDATE " + TableNameS + " SET Tiedosto = '" + pathString + @"\" + filename + "' Where Tiedosto = " + "'" + Files[i] + "'";
-                        command = new OdbcCommand(odbc, cnn);
-                        adapter.UpdateCommand = new OdbcCommand(odbc, cnn);
-                        cnn.Open();
-                        try
+                        //Making sure folder creation is enabled to update database
+                        if (MoveBool == true)
                         {
-                            _ = adapter.UpdateCommand.ExecuteNonQuery();
+                            Updatable = pathString + @"\" + filename;
+                            UpdateDBM(i, Updatable);
                         }
-                        catch (Exception ex)
+                        else if (MoveBool == false)
                         {
-                            try
-                            {
-                                DProblem(ex);
-                            }
-                            catch
-                            {
-                                Thread.Sleep(1);
-                                DProblem(ex);
-                            }
+                            Updatable = NewFile;
+                            UpdateDBM(i, Updatable);
                         }
-                        command.Dispose();
-                        cnn.Close();
                     }
                     #endregion
-
-                    counter++;
+                    //Incrementing counter if file was found
+                    if (FileNotFound == false)
+                    {
+                        counter++;
+                    }
                     worker.ReportProgress(1 * 1);
                 }
+            }
         }
         private void backgroundWorker1_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
@@ -466,9 +507,12 @@ namespace ImageConverter
             ConversionPreview.Source = new BitmapImage(new Uri(Files[0], UriKind.Relative));
 
             //Making progress indicators
-            Left1 = (int)(count - counter);
+            Left1 = (int)(count - (counter + FileNotFoundCounter));
+            //In case file was not found
+
             Done.Text = "Done: " + counter.ToString();
             Left.Text = "Left: " + Left1.ToString();
+            
 
             //Percentage done
             float PercentTemp = (counter / count * 100);
@@ -484,18 +528,20 @@ namespace ImageConverter
             #endregion
 
             #region Making log file to record everything done
-            using (StreamWriter sw = File.AppendText(path + FolderNameS + @"\Log.Txt"))
+            if(MoveBool== false || FileNotFound == true)
             {
-                if (Iteration == 0)
-                {
-                    sw.WriteLine(DateTime.Now.ToString("ddd, dd MMM yyy HH':'mm':'ss 'GMT'"));
-                    sw.WriteLine("User who made the change: " + System.Security.Principal.WindowsIdentity.GetCurrent().Name);
-                    sw.WriteLine("");
-                    Iteration = 1;
-                }
-                sw.WriteLine("MOVED     " + filename + "    FROM    " + sourcePath + "     TO      " + destFile);
-                sw.Close();
+                FolderNameS = "";
             }
+            using StreamWriter sw = File.AppendText(path + FolderNameS + @"\Log.Txt");
+            if (Iteration == 0)
+            {
+                sw.WriteLine(DateTime.Now.ToString("ddd, dd MMM yyy HH':'mm':'ss 'GMT'"));
+                sw.WriteLine("User who made the change: " + System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+                sw.WriteLine("");
+                Iteration = 1;
+            }
+            sw.WriteLine("MOVED     " + filename + "    FROM    " + sourcePath + "     TO      " + destFile);
+            sw.Close();
             #endregion
         }
         private void backgroundWorker1_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
@@ -511,18 +557,33 @@ namespace ImageConverter
             //Handling cancelation
             else if (e.Cancelled)
             {
-                _ = System.Windows.MessageBox.Show("Cancelled. still moved and converted " + counter + " images");
+                if (FileNotFoundCounter== 0)
+                {
+                    _ = System.Windows.MessageBox.Show("Cancelled. still moved and converted " + counter + " images");
+                }
+                else
+                {
+                    _ = System.Windows.MessageBox.Show("Cancelled. still moved and converted " + counter + " images "+FileNotFoundCounter+" Files were not found");
+                }
             }
             //Handling completion
             else
             {
-                _ = System.Windows.MessageBox.Show("Done. Moved and converted " + counter + " images");
+                if (FileNotFoundCounter == 0)
+                {
+                    _ = System.Windows.MessageBox.Show("Done. Moved and converted " + counter + " images");
+                }
+                else
+                {
+                    _ = System.Windows.MessageBox.Show("Done. Moved and converted " + counter + " images " + FileNotFoundCounter + " Files were not found");
+                }
             }
             #region Resetting some values and making rigth control visible/hidden
             ProgressB.Value = 0;
             Left1 = 0;
             counter = 0;
             Iteration = 0;
+            FileNotFoundCounter = 0;
             cnn.Close();
 
             //Making maingrid visible

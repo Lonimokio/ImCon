@@ -3,7 +3,7 @@
 
 porcentage of being ready
 Advanced settings
-visual overhaul use multiple forms
+visual overhaul
 make first screen where you choose where to go
 make settings using text file
 use the webp wrapper to add bunch of useful functions
