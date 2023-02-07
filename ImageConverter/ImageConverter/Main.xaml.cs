@@ -62,6 +62,7 @@ namespace ImageConverter
         string separatorT;
         string TempS;
         private string Converted;
+        string SsourceFile;
         string sourceFile;
         string sourceFile1;
         string odbc;
@@ -74,12 +75,13 @@ namespace ImageConverter
         string FolderNameS;
         string FileNamesS;
         string destFile;
-        string destFile1;
         string Updatable;
         string NewFile;
         string pathString1;
+        string SdestinationFile;
         #endregion
         #region Ints
+        int a = 0;
         int index;
         int FileNotFoundCounter;
         int length;
@@ -105,6 +107,8 @@ namespace ImageConverter
         public List<string> Files = new();
         public List<string> FileN = new();
         public List<string> FileK = new();
+        public List<string> Movables = new();
+        public List<string> Locations = new();
         #endregion
         #region Bool
         bool SmallImagesBool = false;
@@ -318,16 +322,16 @@ namespace ImageConverter
                         {
                             TempS = separator[..index];
                         }
-                        TempS = TempS+"PikkuKuva.Jpeg";
+                        TempS = TempS + "PikkuKuva.Jpeg";
                         //Creating copy of image to use for small image.
-                        string sourceFile = Files[i];
-                        string destinationFile = TempS;
+                        SsourceFile = Files[i];
+                        SdestinationFile = TempS;
                         try
                         {
-                            File.Copy(sourceFile, destinationFile, true);
+                            File.Copy(SsourceFile, SdestinationFile, true);
 
                             // Converting small images into jpeg
-                            var stream = new MemoryStream(File.ReadAllBytes(destinationFile));
+                            var stream = new MemoryStream(File.ReadAllBytes(SdestinationFile));
                             System.Drawing.Image img = new Bitmap(stream);
                             img.Save(TempS, System.Drawing.Imaging.ImageFormat.Jpeg);
                         }
@@ -338,8 +342,8 @@ namespace ImageConverter
                         pathString1 = TempS;
                         filenameS = filename;
                         TempS = "";
-                        sourceFile = "";
-                        destinationFile = "";
+                        SsourceFile = "";
+                        SdestinationFile = "";
                         filename = "";
                     }
                     #endregion
@@ -435,22 +439,33 @@ namespace ImageConverter
 
                             #region File moving
                             //Updating filepaths
-                            sourcePath = Converted;
-                            sourceFile = System.IO.Path.Combine(sourcePath);
+                            sourceFile = System.IO.Path.Combine(Converted);
                             destFile = System.IO.Path.Combine(pathString, filename);
+                            Locations.Add(destFile);
                             GetFileN(i, pathString1);
-                            sourceFile1 = System.IO.Path.Combine(pathString1);
-                            destFile1 = System.IO.Path.Combine(pathString, filename);
+                            destFile = System.IO.Path.Combine(pathString, filename);
+                            //Adding things to list
+                            Movables.Add(sourceFile);
+                            Movables.Add(pathString1);
+                            Locations.Add(destFile);
                             //Catching possible errors
                             try
                             {
-                                System.IO.File.Move(sourceFile, destFile);
-                                System.IO.File.Move(sourceFile1, destFile1);
+                                foreach (string file in Movables)
+                                {
+                                    System.IO.File.Move(file, Locations[a]);
+                                    a++;
+                                }
+                                
                             }
-                            catch (Exception)
+                            catch (Exception x)
                             {
-
+                                System.Windows.MessageBox.Show(x.Message);
+                                Console.WriteLine("<<<Catch: " + x);
                             }
+                            a = 0;
+                            Locations.Clear();
+                            Movables.Clear();
                             #endregion
                         }
                         //If small images are enabled
