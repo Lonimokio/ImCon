@@ -299,7 +299,7 @@ namespace ImageConverter
                 else
                 {
                     #region Checking if image is small image
-                    if (FileK.Count <= i)
+                    if (FileK.Count >= i)
                     {
                         if (FileK[i] == "PikkuKuva")
                         {
@@ -381,20 +381,7 @@ namespace ImageConverter
                             {
 
                             }
-                            //If deletion is enabled delete
-                            #region Deletion
-                            try
-                            {
-                                if (DeletionBool == true)
-                                {
-                                    File.Delete(Files[i]);
-                                }
-                            }
-                            catch (Exception)
-                            {
-
-                            }
-                            #endregion
+                            
                         }
                         else
                         {
@@ -444,6 +431,7 @@ namespace ImageConverter
                             Locations.Add(destFile);
                             GetFileN(i, pathString1);
                             destFile = System.IO.Path.Combine(pathString, filename);
+                            GetFileN(i, Converted);
                             //Adding things to list
                             Movables.Add(sourceFile);
                             Movables.Add(pathString1);
@@ -460,7 +448,6 @@ namespace ImageConverter
                             }
                             catch (Exception x)
                             {
-                                System.Windows.MessageBox.Show(x.Message);
                                 Console.WriteLine("<<<Catch: " + x);
                             }
                             a = 0;
@@ -474,7 +461,7 @@ namespace ImageConverter
                         {
                             //Inserting small images to database
                             OdbcDataAdapter adapter = new();
-                            string odbc = "INSERT INTO " + TableNameS + " (TuoteNro, Tiedosto, Kuvateksti, Verkkokaupassa) VALUES('" + FileN[i] + "', '" + pathString1 + @"\" + filenameS + "', PikkuKuva, 0); ";
+                            string odbc = "INSERT INTO " + TableNameS + " (TuoteNro, Tiedosto, Kuvateksti, Verkkokaupassa) VALUES('" + FileN[i] + "', '" + destFile +  "', 'PikkuKuva', 0); ";
                             command = new OdbcCommand(odbc, cnn);
                             adapter.UpdateCommand = new OdbcCommand(odbc, cnn);
                             cnn.Open();
@@ -511,6 +498,22 @@ namespace ImageConverter
                     {
                         counter++;
                     }
+
+                    #region Deletion
+                    //If deletion is enabled delete
+                    try
+                    {
+                        if (DeletionBool == true)
+                        {
+                            System.Windows.MessageBox.Show(Files[i]);
+                            File.Delete(Files[i]);
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                    #endregion
                     worker.ReportProgress(1 * 1);
                 }
             }
