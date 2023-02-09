@@ -109,6 +109,7 @@ namespace ImageConverter
         public List<string> FileK = new();
         public List<string> Movables = new();
         public List<string> Locations = new();
+        public List<string> AlreadyChecked = new();
         #endregion
         #region Bool
         bool SmallImagesBool = false;
@@ -370,6 +371,9 @@ namespace ImageConverter
                         {
                             try
                             {
+                                //In case same picture on different products
+                                AlreadyChecked.Add(oldImagePath);
+                                //Converting image
                                 using FileStream webPFileStream = new(NewFile, FileMode.Create);
                                 using ImageFactory imageFactory = new(preserveExifData: false);
                                 _ = imageFactory.Load(oldImagePath)
@@ -385,7 +389,17 @@ namespace ImageConverter
                         }
                         else
                         {
-                            FileNotFound = true;
+                            foreach (string file in AlreadyChecked)
+                            {
+                                if (file == oldImagePath)
+                                {
+                                    FileNotFound = false; break;
+                                }
+                                else
+                                {
+                                    FileNotFound = true;
+                                }
+                            }
                         }
                     }
 
@@ -405,7 +419,7 @@ namespace ImageConverter
                     }
                     else
                     {
-
+                        #region File Manipulation
                         //File moving
                         if (MoveBool == true)
                         {
@@ -429,12 +443,15 @@ namespace ImageConverter
                             sourceFile = System.IO.Path.Combine(Converted);
                             destFile = System.IO.Path.Combine(pathString, filename);
                             Locations.Add(destFile);
-                            GetFileN(i, pathString1);
+                            if (SmallImagesBool == true)
+                            {
+                                GetFileN(i, pathString1);
+                                Movables.Add(pathString1);
+                            }
                             destFile = System.IO.Path.Combine(pathString, filename);
                             GetFileN(i, Converted);
                             //Adding things to list
                             Movables.Add(sourceFile);
-                            Movables.Add(pathString1);
                             Locations.Add(destFile);
                             //Catching possible errors
                             try
@@ -455,6 +472,7 @@ namespace ImageConverter
                             Movables.Clear();
                             #endregion
                         }
+                        #endregion
                         //If small images are enabled
                         #region Database updates for small images
                         if (SmallImagesBool == true)
@@ -499,21 +517,6 @@ namespace ImageConverter
                         counter++;
                     }
 
-                    #region Deletion
-                    //If deletion is enabled delete
-                    try
-                    {
-                        if (DeletionBool == true)
-                        {
-                            System.Windows.MessageBox.Show(Files[i]);
-                            File.Delete(Files[i]);
-                        }
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-                    #endregion
                     worker.ReportProgress(1 * 1);
                 }
             }
@@ -603,6 +606,25 @@ namespace ImageConverter
             Iteration = 0;
             FileNotFoundCounter = 0;
             cnn.Close();
+
+            #region Deletion
+            //If deletion is enabled delete
+            try
+            {
+                if (DeletionBool == true)
+                {
+                    foreach(var file in Files)
+                    {
+                        File.Delete(file);
+                    }
+                    
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            #endregion
 
             //Making maingrid visible
             DBMainGrid.Visibility = System.Windows.Visibility.Visible;
