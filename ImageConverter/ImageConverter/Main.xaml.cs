@@ -52,9 +52,30 @@ namespace ImageConverter
         }
 
         #region Variables here
+        #region Settings variables
+        #region Strings
+        string SDataBaseName;
+        string STableName;
+        #endregion
+        #region Ints
+        #endregion
+        #region Float
+        #endregion
+        #region Odbc 
+        #endregion
+        #region Lists
+        #endregion
+        #region Bool
+        bool SKeepOldImages;
+        bool SMoveImages;
+        bool SMakeSmallImages;
+        #endregion
+        #endregion
+        #region DB Conversion variables
         #region Strings
         private string type = "webp";
         private string filename = "";
+        string LogFilename;
         string filenameS;
         string filenameT = "";
         private string Checker;
@@ -64,9 +85,9 @@ namespace ImageConverter
         private string Converted;
         string SsourceFile;
         string sourceFile;
-        string sourceFile1;
         string odbc;
         public string sourcePath;
+        string LogSourcePath;
         public string pathString;
         string connectionstring;
         string Odbc, output;
@@ -75,6 +96,7 @@ namespace ImageConverter
         string FolderNameS;
         string FileNamesS;
         string destFile;
+        string LogDestFile;
         string Updatable;
         string NewFile;
         string pathString1;
@@ -119,13 +141,15 @@ namespace ImageConverter
         bool FileNotFound = false;
         #endregion
         #endregion
+        #endregion
 
-        #region Components in here
+        #region Data Base Convertion
+        #region DB Components in here
         private readonly BackgroundWorker backgroundWorker1 = new();
         DispatcherTimer timer1 = new();
         #endregion
 
-        #region Methods here
+        #region DB Methods here
         private void FillDataGrid()
 
         {
@@ -192,20 +216,21 @@ namespace ImageConverter
             filenameT = "";
 
             filename = TempS;
+            LogFilename = filename;
             TempS = "";
         }
-        public void DProblem(Exception ex)
+        public void DProblem(Exception ex, int i)
         {
             Debug.WriteLine("<<< catch : " + ex.ToString());
             using StreamWriter sw = File.AppendText(path + FolderNameS + @"\Failed.Txt");
-            sw.WriteLine("Error in Sql syntax in " + filename + " this should be manually fixed. Path to it should be: " + sourcePath + " Error is: " + ex);
+            sw.WriteLine("Error in Sql syntax in " + filename + " this should be manually fixed. Path to it should be: " + Files[i] + " Error is: " + ex);
             sw.Close();
         }
         public void UpdateDBM(int i, string NewDatabaseName)
         {
             //Updating database
             adapter = new();
-            odbc = "UPDATE " + TableNameS + " SET Tiedosto = '" + NewDatabaseName + "' Where Tiedosto = " + "'" + Files[i] + "'";
+            odbc = "UPDATE " + TableNameS + " SET Tiedosto = '" + NewDatabaseName + "' Where Tiedosto = " + "'" + Files[i] + "' AND TuoteNro = '" + FileN[i] +"'";
             command = new OdbcCommand(odbc, cnn);
             adapter.UpdateCommand = new OdbcCommand(odbc, cnn);
             cnn.Open();
@@ -215,7 +240,7 @@ namespace ImageConverter
             }
             catch (Exception ex)
             {
-                DProblem(ex);
+                DProblem(ex, i);
             }
             command.Dispose();
             cnn.Close();
@@ -311,6 +336,7 @@ namespace ImageConverter
 
                     //Changing path in a way to prevent fails and prevent sql injection. Double '
                     Files[i] = Files[i].Replace("'", "''");
+                    LogSourcePath = Files[i];
                     //checking if small images are true
                     #region Small images making procces
                     if (SmallImagesBool == true)
@@ -442,6 +468,7 @@ namespace ImageConverter
                             //Updating filepaths
                             sourceFile = System.IO.Path.Combine(Converted);
                             destFile = System.IO.Path.Combine(pathString, filename);
+                            LogDestFile = destFile;
                             Locations.Add(destFile);
                             if (SmallImagesBool == true)
                             {
@@ -501,7 +528,7 @@ namespace ImageConverter
                         //Making sure folder creation is enabled to update database
                         if (MoveBool == true)
                         {
-                            Updatable = pathString + @"\" + filename;
+                            Updatable = Path.Combine(pathString, filename);
                             UpdateDBM(i, Updatable);
                         }
                         else if (MoveBool == false)
@@ -544,7 +571,7 @@ namespace ImageConverter
             ProgressB.Maximum = count + 1;
             if (ProgressB.Maximum > counter)
             {
-                ProgressB.Value = counter;
+                ProgressB.Value = counter + FileNotFoundCounter;
             }
             #endregion
 
@@ -561,7 +588,7 @@ namespace ImageConverter
                 sw.WriteLine("");
                 Iteration = 1;
             }
-            sw.WriteLine("MOVED     " + filename + "    FROM    " + sourcePath + "     TO      " + destFile);
+            sw.WriteLine("MOVED     " + LogFilename + "    FROM    " + LogSourcePath + "     TO      " + LogDestFile+" MADE SMALL IMAGES: "+SmallImagesBool);
             sw.Close();
             #endregion
         }
@@ -627,7 +654,7 @@ namespace ImageConverter
             #endregion
 
             //Making maingrid visible
-            DBMainGrid.Visibility = System.Windows.Visibility.Visible;
+            DBMainGrid.Visibility = Visibility.Visible;
             //Disabling Cancel and hiding conversion
             ConversionProces.Visibility = Visibility.Hidden;
             Cancel.IsEnabled = false;
@@ -640,48 +667,6 @@ namespace ImageConverter
             #endregion
 
             #endregion
-        }
-        #endregion
-
-        #region Menu button logic 
-        private void MenuClick(object sender, RoutedEventArgs e)
-        {
-            AboutB.Background = System.Windows.Media.Brushes.Black;
-            DBConversionB.Background = System.Windows.Media.Brushes.Black;
-            FConversionB.Background = System.Windows.Media.Brushes.Black;
-            SettingsB.Background = System.Windows.Media.Brushes.Black;
-            if ((sender as System.Windows.Controls.Button) == AboutB)
-            {
-                AboutB.Background = System.Windows.Media.Brushes.Gray;
-                About.Visibility = Visibility.Visible;
-                DBConvertion.Visibility = System.Windows.Visibility.Hidden;
-                FConversion.Visibility = System.Windows.Visibility.Hidden;
-                Settings.Visibility = System.Windows.Visibility.Hidden;
-            }
-            if ((sender as System.Windows.Controls.Button) == DBConversionB)
-            {
-                DBConversionB.Background = System.Windows.Media.Brushes.Gray;
-                About.Visibility = Visibility.Hidden;
-                DBConvertion.Visibility = System.Windows.Visibility.Visible;
-                FConversion.Visibility = System.Windows.Visibility.Hidden;
-                Settings.Visibility = System.Windows.Visibility.Hidden;
-            }
-            if ((sender as System.Windows.Controls.Button) == FConversionB)
-            {
-                FConversionB.Background = System.Windows.Media.Brushes.Gray;
-                About.Visibility = Visibility.Hidden;
-                DBConvertion.Visibility = System.Windows.Visibility.Hidden;
-                FConversion.Visibility = System.Windows.Visibility.Visible;
-                Settings.Visibility = System.Windows.Visibility.Hidden;
-            }
-            if ((sender as System.Windows.Controls.Button) == SettingsB)
-            {
-                SettingsB.Background = System.Windows.Media.Brushes.Gray;
-                About.Visibility = Visibility.Hidden;
-                DBConvertion.Visibility = System.Windows.Visibility.Hidden;
-                FConversion.Visibility = System.Windows.Visibility.Hidden;
-                Settings.Visibility = System.Windows.Visibility.Visible;
-            }
         }
         #endregion
 
@@ -926,6 +911,92 @@ namespace ImageConverter
                 Console.WriteLine(ex.Message);
             }
             #endregion
+        }
+
+        
+        #endregion
+
+        #endregion
+
+        #region Menu button logic 
+        private void MenuClick(object sender, RoutedEventArgs e)
+        {
+            AboutB.Background = System.Windows.Media.Brushes.Black;
+            DBConversionB.Background = System.Windows.Media.Brushes.Black;
+            FConversionB.Background = System.Windows.Media.Brushes.Black;
+            SettingsB.Background = System.Windows.Media.Brushes.Black;
+            if ((sender as System.Windows.Controls.Button) == AboutB)
+            {
+                AboutB.Background = System.Windows.Media.Brushes.Gray;
+                About.Visibility = Visibility.Visible;
+                DBConvertion.Visibility = System.Windows.Visibility.Hidden;
+                FConversion.Visibility = System.Windows.Visibility.Hidden;
+                Settings.Visibility = System.Windows.Visibility.Hidden;
+            }
+            if ((sender as System.Windows.Controls.Button) == DBConversionB)
+            {
+                DBConversionB.Background = System.Windows.Media.Brushes.Gray;
+                About.Visibility = Visibility.Hidden;
+                DBConvertion.Visibility = System.Windows.Visibility.Visible;
+                FConversion.Visibility = System.Windows.Visibility.Hidden;
+                Settings.Visibility = System.Windows.Visibility.Hidden;
+            }
+            if ((sender as System.Windows.Controls.Button) == FConversionB)
+            {
+                FConversionB.Background = System.Windows.Media.Brushes.Gray;
+                About.Visibility = Visibility.Hidden;
+                DBConvertion.Visibility = System.Windows.Visibility.Hidden;
+                FConversion.Visibility = System.Windows.Visibility.Visible;
+                Settings.Visibility = System.Windows.Visibility.Hidden;
+            }
+            if ((sender as System.Windows.Controls.Button) == SettingsB)
+            {
+                SettingsB.Background = System.Windows.Media.Brushes.Gray;
+                About.Visibility = Visibility.Hidden;
+                DBConvertion.Visibility = System.Windows.Visibility.Hidden;
+                FConversion.Visibility = System.Windows.Visibility.Hidden;
+                Settings.Visibility = System.Windows.Visibility.Visible;
+            }
+        }
+
+
+        #endregion
+
+        #region Settings
+
+        #region Setting rigth values to setting options
+        private void SettingKeepOldImages_Checked(object sender, RoutedEventArgs e)
+        {
+            SKeepOldImages = true;
+        }
+        private void SettingKeepOldImages_Unchecked(object sender, RoutedEventArgs e)
+        {
+            SKeepOldImages = false;
+        }
+
+        private void SettingMakeSmallImages_Checked(object sender, RoutedEventArgs e)
+        {
+            SMakeSmallImages = true;
+        }
+        private void SettingMakeSmallImages_Unchecked(object sender, RoutedEventArgs e)
+        {
+            SMakeSmallImages= false;
+        }
+
+        private void SettingMoveImages_Checked(object sender, RoutedEventArgs e)
+        {
+            SMoveImages= true;
+            MoveImagesGrid1.Visibility = Visibility.Visible;
+        }
+        private void SettingMoveImages_Unchecked(object sender, RoutedEventArgs e)
+        {
+            SMoveImages= false;
+            MoveImagesGrid1.Visibility = Visibility.Hidden;
+        }
+        #endregion
+        private void SettingSubmit_Click(object sender, RoutedEventArgs e)
+        {
+
         }
         #endregion
     }

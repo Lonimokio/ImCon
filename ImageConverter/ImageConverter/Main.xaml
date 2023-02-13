@@ -88,10 +88,10 @@
                             <Button.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="Black"/>
-                                    <GradientStop Color="#FF5D5959" Offset="1"/>
+                                    <GradientStop Color="#FF484545" Offset="1"/>
                                     <GradientStop Color="#FE1D1B1B" Offset="0.146"/>
                                     <GradientStop Color="#FE232222" Offset="0.351"/>
-                                    <GradientStop Color="#FE919191"/>
+                                    <GradientStop Color="#FE313030"/>
                                 </LinearGradientBrush>
                             </Button.Background>
                         </Button>
@@ -222,16 +222,16 @@
 
                     </Grid>
                 </GroupBox>
-                <GroupBox x:Name="Settings" Header="Settings" Margin="132,10,-7,-4" BorderBrush="#FF0E8636" Foreground="#FF0E8636" Background="#FF212020" d:IsHidden="True">
+                <GroupBox x:Name="Settings" Header="Settings" Margin="132,10,-7,-4" BorderBrush="#FF0E8636" Foreground="#FF0E8636" Background="#FF212020">
                     <Grid>
                         <Rectangle Margin="322,0,321,0" Stroke="Black" Fill="Black" Width="2" Height="400"/>
-                        <Label Content="Database settings" HorizontalAlignment="Left" Height="42" Margin="396,10,0,0" VerticalAlignment="Top" Width="188" Foreground="#FF136930" FontSize="22"/>
-                        <Label Content="General settings" HorizontalAlignment="Left" Height="42" Margin="64,10,0,0" VerticalAlignment="Top" Width="188" Foreground="#FF136930" FontSize="22"/>
+                        <Label Content="Default Database settings" HorizontalAlignment="Left" Height="42" Margin="393,10,0,0" VerticalAlignment="Top" Width="259" Foreground="#FF136930" FontSize="22"/>
+                        <Label Content="Default General settings" HorizontalAlignment="Left" Height="42" Margin="46,10,0,0" VerticalAlignment="Top" Width="245" Foreground="#FF136930" FontSize="22"/>
                         <Label HorizontalAlignment="Left" Height="30" Margin="340,52,0,0" VerticalAlignment="Top" Width="119" Foreground="#FF136930" FontSize="14" Content="Database name"/>
-                        <TextBox HorizontalAlignment="Left" Margin="340,78,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="106" Background="Black" BorderBrush="#FF1F482D" Foreground="#FF1B5D30"/>
+                        <TextBox x:Name="SettingDataBaseName" HorizontalAlignment="Left" Margin="340,78,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="106" Background="Black" BorderBrush="#FF1F482D" Foreground="#FF1B5D30"/>
                         <Label HorizontalAlignment="Left" Height="30" Margin="340,95,0,0" VerticalAlignment="Top" Width="119" Foreground="#FF136930" FontSize="14" Content="Table name"/>
                         <Label HorizontalAlignment="Left" Height="44" Margin="343,165,0,0" VerticalAlignment="Top" Width="119" Foreground="#FF136930" FontSize="14" Content="Grids that need &#xA;to be filled"/>
-                        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Margin="343,0,233,101" Height="81" VerticalAlignment="Bottom" Background="Black" BorderBrush="#FF136930" Foreground="#FF196930" ToolTip="All grids"/>
+                        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Margin="339,0,237,110" Height="81" VerticalAlignment="Bottom" Background="Black" BorderBrush="#FF136930" Foreground="#FF196930" ToolTip="All grids"/>
                         <Button Content="Add" HorizontalAlignment="Left" Margin="436,220,0,0" VerticalAlignment="Top" BorderBrush="#FF1C2E20" Background="Black" Foreground="#FF13652D" ToolTip="Add currently typed textbox entry">
                             <Button.Resources>
                                 <Style TargetType="{x:Type Border}">
@@ -247,11 +247,38 @@
                             </Button.Resources>
                         </Button>
                         <TextBox HorizontalAlignment="Left" Margin="436,244,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" Height="22" Background="Black" BorderBrush="#FF1F482D" Foreground="#FF1F482D" ToolTip="Type grid name and press add"/>
-                        <TextBox HorizontalAlignment="Left" Margin="340,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="106" Background="Black" BorderBrush="#FF1F482D" Foreground="#FF1B5D30"/>
-                        <CheckBox Content="Keep old images" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top" Background="White" BorderBrush="#FF184B26" Foreground="#FF15642F" ToolTip="If cheked will keep old images along side new modified images" Width="112"/>
-                        <CheckBox Content="Move images" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top" Background="White" BorderBrush="#FF184B26" Foreground="#FF15642F" ToolTip="If checked will move images" Width="112" AllowDrop="True" IsChecked="True"/>
+                        <TextBox x:Name="SettingTableName" HorizontalAlignment="Left" Margin="340,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="106" Background="Black" BorderBrush="#FF1F482D" Foreground="#FF1B5D30"/>
                         <Label HorizontalAlignment="Left" Height="30" Margin="198,47,0,0" VerticalAlignment="Top" Width="119" Foreground="#FF136930" FontSize="14" Content="Languege"/>
                         <ComboBox HorizontalAlignment="Left" Margin="205,74,0,0" VerticalAlignment="Top" Width="105" Background="Black" BorderBrush="#FF13682F" Foreground="#FF146930" ToolTip="Select languege (Not yet implemented)"/>
+                        <Button x:Name="SettingSubmit" Content="Submit" HorizontalAlignment="Center" Margin="0,339,0,0" VerticalAlignment="Top" Height="51" Width="120" Foreground="#FF0E8636" BorderBrush="#FF0E8636" Click="SettingSubmit_Click">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="25"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="Black"/>
+                                    <GradientStop Color="#FF484646" Offset="1"/>
+                                    <GradientStop Color="#FE1D1B1B" Offset="0.146"/>
+                                    <GradientStop Color="#FE232222" Offset="0.351"/>
+                                    <GradientStop Color="#FE1F1E1E"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Border x:Name="SettingsDBB_Copy" BorderBrush="#FF191818" BorderThickness="1" CornerRadius="20" Margin="10,57,523,200" Background="#FF1B1A1A">
+                            <Grid Margin="0,-9,-7,9">
+                                <CheckBox x:Name="SettingKeepOldImages" Content="Keep old images" HorizontalAlignment="Center" Margin="0,31,0,0" VerticalAlignment="Top" Background="White" BorderBrush="#FF184B26" Foreground="#FF15642F" ToolTip="If cheked will keep old images along side new modified images" Width="112" IsChecked="True" Checked="SettingKeepOldImages_Checked" Unchecked="SettingKeepOldImages_Unchecked"/>
+                                <CheckBox x:Name="SettingMakeSmallImages" Content="Small Images" HorizontalAlignment="Center" Margin="0,16,0,0" VerticalAlignment="Top" BorderBrush="#FF184B26" Foreground="#FF15642F" ToolTip="If checked will make small images" Width="112" AllowDrop="True" IsChecked="False" Background="White" Checked="SettingMakeSmallImages_Checked" Unchecked="SettingMakeSmallImages_Unchecked"/>
+                                <CheckBox x:Name="SettingMoveImages" Content="Move images" HorizontalAlignment="Center" Margin="0,46,0,0" VerticalAlignment="Top" Background="White" BorderBrush="#FF184B26" Foreground="#FF15642F" ToolTip="If checked will move images" Width="112" AllowDrop="True" IsChecked="True" Checked="SettingMoveImages_Checked" Unchecked="SettingMoveImages_Unchecked"/>
+                                <Grid x:Name="MoveImagesGrid1" Visibility="Hidden">
+                                    <Label x:Name="SaveP2" Content="Save paths" HorizontalAlignment="Left" Margin="16,53,0,0" VerticalAlignment="Top" Foreground="#FF136930" Height="27" Width="98" HorizontalContentAlignment="Center"/>
+                                    <TextBox x:Name="PathB2" HorizontalAlignment="Left" Margin="16,98,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Text="C:\winskj\" HorizontalContentAlignment="Center" TextChanged="PathB_TextChanged" ToolTip="Path name where images will be put into"/>
+                                    <TextBox x:Name="FolderName1" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Text="Kuvat" HorizontalContentAlignment="Center" TextChanged="PathB_TextChanged" ToolTip="Folder name where images will be saved" Margin="16,80,0,0"/>
+                                    <TextBox x:Name="FileNames1" HorizontalAlignment="Left" Margin="16,115,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Text="Tuote-numero-" HorizontalContentAlignment="Center" TextChanged="PathB_TextChanged" ToolTip="Image file names"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
                     </Grid>
                 </GroupBox>
                 <GroupBox x:Name="ConversionProces" Header="Converting..." Margin="174,46,48,36" Foreground="#FF0E8636" d:IsHidden="True">
