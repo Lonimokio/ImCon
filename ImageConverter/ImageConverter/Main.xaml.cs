@@ -51,13 +51,143 @@ namespace ImageConverter
             #endregion
         }
 
+        //Making some changes when the window is loaded
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            WindowLoaded = true;
+            #region Display settings
+            //Making windows to be displayed correctly
+            DBConvertion.Visibility = System.Windows.Visibility.Hidden;
+            FConversion.Visibility = System.Windows.Visibility.Hidden;
+            Settings.Visibility = System.Windows.Visibility.Hidden;
+            ConversionProces.Visibility = Visibility.Hidden;
+            #endregion
+
+            #region Getting settings
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"/Settings.txt"))
+            {
+                foreach (string line in System.IO.File.ReadLines(AppDomain.CurrentDomain.BaseDirectory + @"/Settings.txt"))
+                {
+                    switch (SCounter)
+                    {
+                        case 1:
+                            SettingMakeSmallImages.IsChecked = bool.Parse(line);
+                            SmallImages.IsChecked = bool.Parse(line);
+                            break;
+                        case 2:
+                            SettingKeepOldImages.IsChecked = bool.Parse(line);
+                            Deletion.IsChecked = bool.Parse(line);
+                            break;
+                        case 3:
+                            SettingMoveImages.IsChecked = bool.Parse(line);
+                            MoveI.IsChecked = bool.Parse(line);
+                            break;
+                        case 4:
+                            PathB2.Text = line;
+                            PathB.Text = line;
+                            break;
+                        case 5:
+                            FileNames1.Text = line;
+                            FileNames.Text = line;
+                            break;
+                        case 6:
+                            FolderName1.Text = line;
+                            FolderName.Text = line;
+                            break;
+                        case 7:
+                            SettingDataBaseName.Text = line;
+                            DBName.Text = line;
+                            break;
+                        case 8:
+                            SettingTableName.Text = line;
+                            TableName.Text = line;
+                            break;
+                        case 9:
+                            SettingDescription.Text = line;
+                            break;
+                        case 10:
+                            SettingFile.Text = line;
+                            break;
+                        case 11:
+                            SettingProductNumber.Text = line;
+                            break;
+                        case 12:
+                            SettingBool.Text = line;
+                            break;
+                        case 13:
+                            SettingsUpdateDataBase.IsChecked = bool.Parse(line);
+                            UpdateDB.IsChecked = bool.Parse(line);
+                            break;
+                        case 14:
+                            Quality = int.Parse(line);
+                            scrollBar1.Value = int.Parse(line);
+                            scrollBar2.Value = int.Parse(line);
+                            break;
+                        case 15:
+                            type = line;
+                            TypeB.Text = line;
+                            TypeB1.Text = line;
+                            break;
+                    }
+                    SCounter++;
+                }
+            }
+            counter = 0;
+            #endregion 
+
+            #region DataBase Things
+            #region Setting values in variables
+            path = PathB.Text;
+            TableNameS = TableName.Text;
+            FolderNameS = FolderName.Text;
+            FileNamesS = FileNames.Text;
+            #endregion
+
+            #region Default database
+            //Getting default database
+            try
+            {
+                DBName.Text = Environment.GetEnvironmentVariable("kanta");
+                length = DBName.Items.Count;
+                if (length >= 0)
+                {
+                    _ = DBName.Items.Add(Environment.GetEnvironmentVariable("kanta"));
+                }
+                for (int i = 0; i <= length; i++)
+                {
+                    DBName.SelectedIndex = i;
+                    if (DBName.Text != Environment.GetEnvironmentVariable("kanta"))
+                    {
+                        _ = DBName.Items.Add(Environment.GetEnvironmentVariable("kanta"));
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            #endregion
+            #endregion
+        }
+
         #region Variables here
         #region Settings variables
         #region Strings
-        string SDataBaseName;
-        string STableName;
+        private string SDataBaseName;
+        private string STableName;
+        private string SPathB;
+        private string SFilenames;
+        private string SFolderName;
+        private string SDBProductNumber;
+        private string SDBDescription;
+        private string SDBImageFile;
+        private string SDBStoreBool;
+        private string SType;
         #endregion
         #region Ints
+        int SCounter = 0;
+        int SQuality= 0;
         #endregion
         #region Float
         #endregion
@@ -66,51 +196,53 @@ namespace ImageConverter
         #region Lists
         #endregion
         #region Bool
-        bool SKeepOldImages;
-        bool SMoveImages;
-        bool SMakeSmallImages;
+        private bool SKeepOldImages;
+        private bool SMoveImages;
+        private bool SMakeSmallImages;
+        private bool WindowLoaded;
+        private bool SUpdateDB;
         #endregion
         #endregion
         #region DB Conversion variables
         #region Strings
         private string type = "webp";
         private string filename = "";
-        string LogFilename;
-        string filenameS;
-        string filenameT = "";
+        private string LogFilename;
+        private string filenameS;
+        private string filenameT = "";
         private string Checker;
         private string separator;
-        string separatorT;
-        string TempS;
+        private string separatorT;
+        private string TempS;
         private string Converted;
-        string SsourceFile;
-        string sourceFile;
-        string odbc;
+        private string SsourceFile;
+        private string sourceFile;
+        private string odbc;
         public string sourcePath;
-        string LogSourcePath;
+        private string LogSourcePath;
         public string pathString;
-        string connectionstring;
-        string Odbc, output;
-        string path;
-        string TableNameS;
-        string FolderNameS;
-        string FileNamesS;
-        string destFile;
-        string LogDestFile;
-        string Updatable;
-        string NewFile;
-        string pathString1;
-        string SdestinationFile;
+        private string connectionstring;
+        private string Odbc, output;
+        private string path;
+        private string TableNameS;
+        private string FolderNameS;
+        private string FileNamesS;
+        private string destFile;
+        private string LogDestFile;
+        private string Updatable;
+        private string NewFile;
+        private string pathString1;
+        private string SdestinationFile;
         #endregion
         #region Ints
-        int a = 0;
-        int index;
-        int FileNotFoundCounter;
-        int length;
-        int lengthT;
-        int Seconds;
-        int Minutes;
-        int Hours;
+        private int a = 0;
+        private int index;
+        private int FileNotFoundCounter;
+        private int length;
+        private int lengthT;
+        private int Seconds;
+        private int Minutes;
+        private int Hours;
         private int Quality = 60;
         private int Iteration = 0;
         private int Left1;
@@ -132,13 +264,15 @@ namespace ImageConverter
         public List<string> Movables = new();
         public List<string> Locations = new();
         public List<string> AlreadyChecked = new();
+        public List<string> DeletionList = new();
         #endregion
         #region Bool
-        bool SmallImagesBool = false;
-        bool DeletionBool = false;
-        bool MoveBool = true;
-        bool UpdateDBBool = true;
-        bool FileNotFound = false;
+        private bool SmallImagesBool = false;
+        private bool DeletionBool = false;
+        private bool MoveBool = true;
+        private bool UpdateDBBool = true;
+        private bool FileNotFound = false;
+        private bool DeletionProcces = false;
         #endregion
         #endregion
         #endregion
@@ -146,7 +280,7 @@ namespace ImageConverter
         #region Data Base Convertion
         #region DB Components in here
         private readonly BackgroundWorker backgroundWorker1 = new();
-        DispatcherTimer timer1 = new();
+        private readonly DispatcherTimer timer1 = new();
         #endregion
 
         #region DB Methods here
@@ -155,26 +289,18 @@ namespace ImageConverter
         {
 
             string ConString = "Driver={Pervasive ODBC Unicode Interface}; ServerName=Localhost;DBQ=" + DBName.Text + "; TransportHint=TCP;";
+            using OdbcConnection con = new(ConString);
 
-            string CmdString = string.Empty;
+            string CmdString = "SELECT * FROM " + TableNameS;
+            OdbcCommand cmd = new(CmdString, con);
 
-            using (OdbcConnection con = new(ConString))
+            OdbcDataAdapter sda = new(cmd);
 
-            {
+            DataTable dt = new(DBName.Text);
 
-                CmdString = "SELECT * FROM " + TableNameS;
+            _ = sda.Fill(dt);
 
-                OdbcCommand cmd = new(CmdString, con);
-
-                OdbcDataAdapter sda = new(cmd);
-
-                DataTable dt = new(DBName.Text);
-
-                sda.Fill(dt);
-
-                PreviewD.ItemsSource = dt.DefaultView;
-
-            }
+            PreviewD.ItemsSource = dt.DefaultView;
         }
         public void GetFileN(int i, string Conversion)
         {
@@ -230,7 +356,7 @@ namespace ImageConverter
         {
             //Updating database
             adapter = new();
-            odbc = "UPDATE " + TableNameS + " SET Tiedosto = '" + NewDatabaseName + "' Where Tiedosto = " + "'" + Files[i] + "' AND TuoteNro = '" + FileN[i] +"'";
+            odbc = "UPDATE " + TableNameS + " SET Tiedosto = '" + NewDatabaseName + "' Where Tiedosto = " + "'" + Files[i] + "' AND TuoteNro = '" + FileN[i] + "'";
             command = new OdbcCommand(odbc, cnn);
             adapter.UpdateCommand = new OdbcCommand(odbc, cnn);
             cnn.Open();
@@ -263,6 +389,7 @@ namespace ImageConverter
                         Files.Clear();
                         FileN.Clear();
                         FileK.Clear();
+                        DeletionList.Clear();
                     }
                     else
                     {
@@ -280,6 +407,7 @@ namespace ImageConverter
                     {
                         output = dataReader.GetValue(0).ToString();
                         Files.Add(output);
+                        DeletionList.Add(output);
                         output = dataReader.GetValue(1).ToString();
                         FileN.Add(output);
                         output = dataReader.GetValue(2).ToString();
@@ -292,7 +420,7 @@ namespace ImageConverter
                 catch
                 {
                     //catching error with above procces
-                    System.Windows.MessageBox.Show("Invalid database or table name!", "Invalid input");
+                    _ = System.Windows.MessageBox.Show("Invalid database or table name!", "Invalid input");
                 }
 
             }
@@ -349,7 +477,7 @@ namespace ImageConverter
                         {
                             TempS = separator[..index];
                         }
-                        TempS = TempS + "PikkuKuva.Jpeg";
+                        TempS += "PikkuKuva.Jpeg";
                         //Creating copy of image to use for small image.
                         SsourceFile = Files[i];
                         SdestinationFile = TempS;
@@ -358,7 +486,7 @@ namespace ImageConverter
                             File.Copy(SsourceFile, SdestinationFile, true);
 
                             // Converting small images into jpeg
-                            var stream = new MemoryStream(File.ReadAllBytes(SdestinationFile));
+                            MemoryStream stream = new(File.ReadAllBytes(SdestinationFile));
                             System.Drawing.Image img = new Bitmap(stream);
                             img.Save(TempS, System.Drawing.Imaging.ImageFormat.Jpeg);
                         }
@@ -388,7 +516,7 @@ namespace ImageConverter
                     string oldImagePath = Files[i];
                     NewFile = Converted;
                     //Checking if file already in webp
-                    if (Checker != "."+type)
+                    if (Checker != "." + type)
                     {
 
 
@@ -411,7 +539,7 @@ namespace ImageConverter
                             {
 
                             }
-                            
+
                         }
                         else
                         {
@@ -427,6 +555,11 @@ namespace ImageConverter
                                 }
                             }
                         }
+                    }
+                    else if (DeletionBool == false)
+                    {
+                        DeletionBool= true;
+                        DeletionProcces = true;
                     }
 
 
@@ -488,7 +621,7 @@ namespace ImageConverter
                                     System.IO.File.Move(file, Locations[a]);
                                     a++;
                                 }
-                                
+
                             }
                             catch (Exception x)
                             {
@@ -506,7 +639,7 @@ namespace ImageConverter
                         {
                             //Inserting small images to database
                             OdbcDataAdapter adapter = new();
-                            string odbc = "INSERT INTO " + TableNameS + " (TuoteNro, Tiedosto, Kuvateksti, Verkkokaupassa) VALUES('" + FileN[i] + "', '" + destFile +  "', 'PikkuKuva', 0); ";
+                            string odbc = "INSERT INTO " + TableNameS + " (TuoteNro, Tiedosto, Kuvateksti, Verkkokaupassa) VALUES('" + FileN[i] + "', '" + destFile + "', 'PikkuKuva', 0); ";
                             command = new OdbcCommand(odbc, cnn);
                             adapter.UpdateCommand = new OdbcCommand(odbc, cnn);
                             cnn.Open();
@@ -544,6 +677,13 @@ namespace ImageConverter
                         counter++;
                     }
 
+                    if (DeletionProcces == true)
+                    {
+                        DeletionBool= false;
+                        DeletionProcces = false;
+                        DeletionList.RemoveAt(i);
+                    }
+
                     worker.ReportProgress(1 * 1);
                 }
             }
@@ -560,11 +700,11 @@ namespace ImageConverter
 
             Done.Text = "Done: " + counter.ToString();
             Left.Text = "Left: " + Left1.ToString();
-            
+
 
             //Percentage done
-            float PercentTemp = (counter / count * 100);
-            DonePercent.Content = Math.Round((Decimal)PercentTemp, 1, MidpointRounding.AwayFromZero).ToString() + "% Done";
+            float PercentTemp = counter / count * 100;
+            DonePercent.Content = Math.Round((decimal)PercentTemp, 1, MidpointRounding.AwayFromZero).ToString() + "% Done";
 
             //Progress bar
             ProgressB.Minimum = 0;
@@ -576,7 +716,7 @@ namespace ImageConverter
             #endregion
 
             #region Making log file to record everything done
-            if(MoveBool== false || FileNotFound == true)
+            if (MoveBool == false || FileNotFound == true)
             {
                 FolderNameS = "";
             }
@@ -588,7 +728,7 @@ namespace ImageConverter
                 sw.WriteLine("");
                 Iteration = 1;
             }
-            sw.WriteLine("MOVED     " + LogFilename + "    FROM    " + LogSourcePath + "     TO      " + LogDestFile+" MADE SMALL IMAGES: "+SmallImagesBool);
+            sw.WriteLine("MOVED     " + LogFilename + "    FROM    " + LogSourcePath + "     TO      " + LogDestFile + " MADE SMALL IMAGES: " + SmallImagesBool);
             sw.Close();
             #endregion
         }
@@ -600,31 +740,21 @@ namespace ImageConverter
             //handling error in progress
             if (e.Error != null)
             {
-                System.Windows.MessageBox.Show(e.Error.Message);
+                _ = System.Windows.MessageBox.Show(e.Error.Message);
             }
             //Handling cancelation
             else if (e.Cancelled)
             {
-                if (FileNotFoundCounter== 0)
-                {
-                    _ = System.Windows.MessageBox.Show("Cancelled. still moved and converted " + counter + " images");
-                }
-                else
-                {
-                    _ = System.Windows.MessageBox.Show("Cancelled. still moved and converted " + counter + " images "+FileNotFoundCounter+" Files were not found");
-                }
+                _ = FileNotFoundCounter == 0
+                    ? System.Windows.MessageBox.Show("Cancelled. still moved and converted " + counter + " images")
+                    : System.Windows.MessageBox.Show("Cancelled. still moved and converted " + counter + " images " + FileNotFoundCounter + " Files were not found");
             }
             //Handling completion
             else
             {
-                if (FileNotFoundCounter == 0)
-                {
-                    _ = System.Windows.MessageBox.Show("Done. Moved and converted " + counter + " images");
-                }
-                else
-                {
-                    _ = System.Windows.MessageBox.Show("Done. Moved and converted " + counter + " images " + FileNotFoundCounter + " Files were not found");
-                }
+                _ = FileNotFoundCounter == 0
+                    ? System.Windows.MessageBox.Show("Done. Moved and converted " + counter + " images")
+                    : System.Windows.MessageBox.Show("Done. Moved and converted " + counter + " images " + FileNotFoundCounter + " Files were not found");
             }
             #region Resetting some values and making rigth control visible/hidden
             ProgressB.Value = 0;
@@ -640,11 +770,11 @@ namespace ImageConverter
             {
                 if (DeletionBool == true)
                 {
-                    foreach(var file in Files)
+                    foreach (string file in DeletionList)
                     {
                         File.Delete(file);
                     }
-                    
+
                 }
             }
             catch (Exception)
@@ -803,12 +933,16 @@ namespace ImageConverter
         }
 
         #endregion
-
-        void scrollBar1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void TypeB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            QualityB.Text = scrollBar1.Value.ToString();
+            type = TypeB.Text;
         }
 
+        private void scrollBar1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            QualityB.Text = scrollBar1.Value.ToString();
+            scrollBar2.Value = scrollBar1.Value;
+        }
         private void QualityB_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
@@ -847,7 +981,7 @@ namespace ImageConverter
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             // Cancel the asynchronous operation.
-            this.backgroundWorker1.CancelAsync();
+            backgroundWorker1.CancelAsync();
 
             // Disable the Cancel button.
             Cancel.IsEnabled = false;
@@ -867,53 +1001,6 @@ namespace ImageConverter
         }
         #endregion
 
-        //Making some changes when the window is loaded
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            #region Setting values in variables
-            path = PathB.Text;
-            TableNameS = TableName.Text;
-            FolderNameS = FolderName.Text;
-            FileNamesS = FileNames.Text;
-            #endregion
-
-            #region Display settings
-            //Making windows to be displayed correctly
-            this.SizeToContent = SizeToContent.WidthAndHeight;
-            DBConvertion.Visibility = System.Windows.Visibility.Hidden;
-            FConversion.Visibility = System.Windows.Visibility.Hidden;
-            Settings.Visibility = System.Windows.Visibility.Hidden;
-            ConversionProces.Visibility = Visibility.Hidden;
-            #endregion
-
-            #region Default database
-            //Getting default database
-            try
-            {
-                DBName.Text = Environment.GetEnvironmentVariable("kanta");
-                length = DBName.Items.Count;
-                if (length >= 0)
-                {
-                    DBName.Items.Add(Environment.GetEnvironmentVariable("kanta"));
-                }
-                for (int i = 0; i <= length; i++)
-                {
-                    DBName.SelectedIndex = i;
-                    if (DBName.Text != Environment.GetEnvironmentVariable("kanta"))
-                    {
-                        DBName.Items.Add(Environment.GetEnvironmentVariable("kanta"));
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            #endregion
-        }
-
-        
         #endregion
 
         #endregion
@@ -973,29 +1060,139 @@ namespace ImageConverter
         {
             SKeepOldImages = false;
         }
-
         private void SettingMakeSmallImages_Checked(object sender, RoutedEventArgs e)
         {
             SMakeSmallImages = true;
         }
         private void SettingMakeSmallImages_Unchecked(object sender, RoutedEventArgs e)
         {
-            SMakeSmallImages= false;
+            SMakeSmallImages = false;
         }
-
         private void SettingMoveImages_Checked(object sender, RoutedEventArgs e)
         {
-            SMoveImages= true;
-            MoveImagesGrid1.Visibility = Visibility.Visible;
+            SMoveImages = true;
+            if (WindowLoaded == true)
+            {
+                MoveImagesGrid1.Visibility = Visibility.Visible;
+            }
         }
         private void SettingMoveImages_Unchecked(object sender, RoutedEventArgs e)
         {
-            SMoveImages= false;
+            SMoveImages = false;
             MoveImagesGrid1.Visibility = Visibility.Hidden;
         }
+        private void PathB2_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SPathB = PathB2.Text;
+        }
+        private void FolderName1_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SFolderName = FolderName1.Text;
+        }
+        private void FileNames1_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SFilenames = FileNames1.Text;
+        }
+        private void SettingDataBaseName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SDataBaseName = SettingDataBaseName.Text;
+        }
+        private void SettingTableName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            STableName = SettingTableName.Text;
+        }
+        private void SettingBool_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SDBStoreBool = SettingBool.Text;
+        }
+        private void SettingFile_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SDBImageFile = SettingFile.Text;
+        }
+        private void SettingProductNumber_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SDBProductNumber = SettingProductNumber.Text;
+        }
+        private void SettingDescription_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SDBDescription = SettingDescription.Text;
+        }
+        private void SettingsUpdateDataBase_Checked(object sender, RoutedEventArgs e)
+        {
+            SUpdateDB = true;
+        }
+        private void SettingsUpdateDataBase_Unchecked(object sender, RoutedEventArgs e)
+        {
+            SUpdateDB = false;
+        }
+        private void QualityB1_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                if (QualityB1.Text != "")
+                {
+                    if (int.Parse(QualityB1.Text) > 100)
+                    {
+                        QualityB1.Text = "100";
+                    }
+                    else if (int.Parse(QualityB1.Text) < 0)
+                    {
+                        QualityB1.Text = "0";
+                    }
+                }
+                else
+                {
+
+                }
+            }
+            catch
+            {
+                QualityB1.Text = scrollBar2.Value.ToString();
+            }
+            try
+            {
+                SQuality = int.Parse(QualityB1.Text);
+            }
+            catch
+            {
+
+            }
+        }
+        private void scrollBar2_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            QualityB1.Text = scrollBar2.Value.ToString();
+        }
+        private void TypeB1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SType = TypeB1.Text;
+        }
         #endregion
+
         private void SettingSubmit_Click(object sender, RoutedEventArgs e)
         {
+            //Writing settings file to save users setting
+            using StreamWriter sw = new(AppDomain.CurrentDomain.BaseDirectory + @"/Settings.txt");
+            #region Things to write to settings
+            sw.WriteLine("Settings here");          //Row 1
+            sw.WriteLine(SMakeSmallImages+ "");     //Row 2
+            sw.WriteLine(SKeepOldImages+ "");       //Row 3
+            sw.WriteLine(SMoveImages + "");         //Row 4
+            sw.WriteLine(SPathB + "");              //Row 5
+            sw.WriteLine(SFilenames + "");          //Row 6
+            sw.WriteLine(SFolderName + "");         //Row 7
+            sw.WriteLine(SDataBaseName + "");       //Row 8
+            sw.WriteLine(STableName + "");          //Row 9
+            sw.WriteLine(SDBDescription + "");      //Row 10
+            sw.WriteLine(SDBImageFile + "");        //Row 11
+            sw.WriteLine(SDBProductNumber + "");    //Row 12
+            sw.WriteLine(SDBStoreBool + "");        //Row 13
+            sw.WriteLine(SUpdateDB + "");           //Row 14
+            sw.WriteLine(SQuality + "");            //Row 15
+            sw.WriteLine(SType + "");               //Row 16
+
+            #endregion 
+            sw.Close();
+            //Setting settings to other pages
 
         }
         #endregion
