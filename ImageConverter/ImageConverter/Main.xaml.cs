@@ -47,6 +47,10 @@ namespace ImageConverter
             scrollBar1.Minimum = 0;
             scrollBar1.Maximum = 100;
             scrollBar1.SmallChange = 1;
+            scrollBar2.ValueChanged += new RoutedPropertyChangedEventHandler<double>(scrollBar2_ValueChanged);
+            scrollBar2.Minimum = 0;
+            scrollBar2.Maximum = 100;
+            scrollBar2.SmallChange = 1;
             #endregion
             #endregion
         }
@@ -165,7 +169,9 @@ namespace ImageConverter
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                System.Windows.MessageBox.Show(ex.Message + "ETA: DefaultDatabase");
+                Console.WriteLine("<<<Catch: " + ex);
+                DProblem(ex, 0);
             }
             #endregion
             #endregion
@@ -348,8 +354,9 @@ namespace ImageConverter
         public void DProblem(Exception ex, int i)
         {
             Debug.WriteLine("<<< catch : " + ex.ToString());
-            using StreamWriter sw = File.AppendText(path + FolderNameS + @"\Failed.Txt");
-            sw.WriteLine("Error in Sql syntax in " + filename + " this should be manually fixed. Path to it should be: " + Files[i] + " Error is: " + ex);
+            using StreamWriter sw = File.AppendText(path + @"\Failed.Txt");
+            sw.WriteLine("Error in " + filename + " this migth need a manual fix. Path to it should be: " + Files[i] + " Error is: " + ex);
+            sw.WriteLine("");
             sw.Close();
         }
         public void UpdateDBM(int i, string NewDatabaseName)
@@ -366,6 +373,8 @@ namespace ImageConverter
             }
             catch (Exception ex)
             {
+                System.Windows.MessageBox.Show(ex.Message + "ALPHA: UpdateDBM");
+                Console.WriteLine("<<<Catch: " + ex);
                 DProblem(ex, i);
             }
             command.Dispose();
@@ -443,6 +452,7 @@ namespace ImageConverter
             //Looping trough to procces images
             for (int i = 0; i <= count; i++)
             {
+                System.Windows.MessageBox.Show("BEGINING");
                 #region Checking if cancel has been clicked
                 if (worker.CancellationPending == true)
                 {
@@ -490,9 +500,11 @@ namespace ImageConverter
                             System.Drawing.Image img = new Bitmap(stream);
                             img.Save(TempS, System.Drawing.Imaging.ImageFormat.Jpeg);
                         }
-                        catch
+                        catch (Exception ex) 
                         {
-
+                            System.Windows.MessageBox.Show(ex.Message + "BETA: Smallimagesmaking");
+                            Console.WriteLine("<<<Catch: " + ex); 
+                            DProblem(ex, i);
                         }
                         pathString1 = TempS;
                         filenameS = filename;
@@ -535,9 +547,11 @@ namespace ImageConverter
                                          .Quality(Quality)
                                          .Save(webPFileStream);
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
-
+                                System.Windows.MessageBox.Show(ex.Message + "GAMMA: FileConversion");
+                                Console.WriteLine("<<<Catch: " + ex);
+                                DProblem(ex, i);
                             }
 
                         }
@@ -573,6 +587,7 @@ namespace ImageConverter
                     {
                         if (!File.Exists(Files[i]))
                         {
+                            System.Windows.MessageBox.Show("FILEWASNOTFOUND: " + Files[i]);
                             FileNotFoundCounter++;
                         }
                     }
@@ -586,7 +601,11 @@ namespace ImageConverter
                             //Creating folders and moving images
                             string folderName = path + FolderNameS;
                             pathString = System.IO.Path.Combine(folderName, FileNamesS + FileN[i]);
-                            _ = Directory.CreateDirectory(pathString);
+                            System.Windows.MessageBox.Show("THE PATH STRING IS: " + pathString + " WHEN FORMED. ITERATION IS: " + i);
+                            if (!Directory.Exists(pathString))
+                            {
+                                _ = Directory.CreateDirectory(pathString);
+                            }
 
                             separator = Converted;
 
@@ -623,9 +642,11 @@ namespace ImageConverter
                                 }
 
                             }
-                            catch (Exception x)
+                            catch (Exception ex)
                             {
-                                Console.WriteLine("<<<Catch: " + x);
+                                System.Windows.MessageBox.Show(ex.Message + "DELTA: Moving images");
+                                Console.WriteLine("<<<Catch: " + ex);
+                                DProblem(ex, i);
                             }
                             a = 0;
                             Locations.Clear();
@@ -649,7 +670,9 @@ namespace ImageConverter
                             }
                             catch (Exception ex)
                             {
-                                Debug.WriteLine("<<< catch : " + ex.ToString());
+                                System.Windows.MessageBox.Show(ex.Message + "EPSILON: DB SmallImages");
+                                Console.WriteLine("<<<Catch: " + ex);
+                                DProblem(ex, i);
                             }
                             cnn.Close();
                         }
@@ -683,6 +706,7 @@ namespace ImageConverter
                         DeletionProcces = false;
                         DeletionList.RemoveAt(i);
                     }
+                    System.Windows.MessageBox.Show("Ending");
 
                     worker.ReportProgress(1 * 1);
                 }
@@ -690,6 +714,7 @@ namespace ImageConverter
         }
         private void backgroundWorker1_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
+            System.Windows.MessageBox.Show("TEST");
             #region Progress indicators
             //image
             ConversionPreview.Source = new BitmapImage(new Uri(Files[0], UriKind.Relative));
@@ -777,9 +802,11 @@ namespace ImageConverter
 
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                System.Windows.MessageBox.Show(ex.Message + "ZETA: Deletion");
+                Console.WriteLine("<<<Catch: " + ex);
+                DProblem(ex, 0);
             }
             #endregion
 
