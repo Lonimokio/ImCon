@@ -1,1 +1,0 @@
-alter table omnibus (add eilinen double, add lopullinen double);
