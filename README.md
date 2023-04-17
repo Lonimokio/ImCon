@@ -1,6 +1,6 @@
 # ImCon (WIP)
 
-ImCon (Short for image converter) is a useful tool originally designed to take image location from a database, sort them and convert to webp. This is intended to help websites that use databases to store images. With this you can make websites ligther fast and easily.
+ImCon (short for image converter) is a useful tool originally designed to take image location from a database, sort them, and convert them to webp format. This tool is intended to help websites that use databases to store images by making the websites lighter, faster, and easier to use.
 
 ## Features
 
@@ -8,21 +8,20 @@ ImCon (Short for image converter) is a useful tool originally designed to take i
 - Sort images from database
 - Improve website performance by reducing image size
 
-## Future plans
+## Future Plans
 
-Additional functionality will be added such as:
+We have many plans for future development, including:
 
 - Normal file conversion from the computer
 - Support for more image formats
-- Command line interface
+- Command-line interface
 
 Stay tuned for updates!
 
 ## Contributing
 
-Contributions are welcome! Feel free to submit a pull request or open an issue if you encounter any problems or have any suggestions.
+We welcome contributions from the community. If you have any suggestions, encounter any problems, or would like to submit a pull request, please do so!
 
 ## License
 
 This project is licensed under the [GNU License](LICENSE).
-
