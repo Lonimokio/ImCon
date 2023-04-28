@@ -10,7 +10,7 @@ ImCon (short for image converter) is a useful tool originally designed to take i
 
 ## Future Plans
 
-We have many plans for future development, including:
+I have many plans for future development, including:
 
 - Normal file conversion from the computer
 - Support for more image formats
