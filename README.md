@@ -20,7 +20,7 @@ Stay tuned for updates!
 
 ## Contributing
 
-We welcome contributions from the community. If you have any suggestions, encounter any problems, or would like to submit a pull request, please do so!
+I welcome contributions from the community. If you have any suggestions, encounter any problems, or would like to submit a pull request, please do so!
 
 ## License
 
